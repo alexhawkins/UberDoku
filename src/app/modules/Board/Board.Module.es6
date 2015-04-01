@@ -5,7 +5,7 @@ import boardTemplate from "./Board.Template";
 /************************************************************************
 * Board Class                                                          *
 *************************************************************************
-* File: Board.Module.js
+* File: Board.Module.es6
 * ***********************************************************************
 * Description: the Board module is where all the magic of the game
 * happens. This is where the actual Game Board is created and various
@@ -52,7 +52,7 @@ class Board {
     }
 
     /*============================ Class Methods ========================*/
-    
+
 }
 
 

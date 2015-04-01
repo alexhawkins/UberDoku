@@ -8,7 +8,7 @@ import Board from "./modules/Board/Board.Module";
 /************************************************************************
 * Game Class                                                            *
 *************************************************************************
-* File: Game.Module.js
+* File: Game.Module.es6
 * ***********************************************************************
 * Description: the main module for Uberdoku where client-side state is 
 * generally mantained. Cross pollination between modules allows us to 

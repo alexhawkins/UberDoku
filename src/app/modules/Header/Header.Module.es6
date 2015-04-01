@@ -5,7 +5,7 @@ import headerTemplate from "./Header.Template";
 /************************************************************************
 * Header Class                                                          *
 *************************************************************************
-* File: Header.Module.js
+* File: Header.Module.es6
 * ***********************************************************************
 * Description: the Header module is where navigation and other
 * game control elements reside.   
