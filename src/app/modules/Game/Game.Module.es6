@@ -1,10 +1,9 @@
-/*     {  UberDoku defined assets         }   */
-import  "../../assets/stylesheets/base";
-/*     {  Vendor defined modules & assets }   */   
-import { Promise } from 'es6-promise';
- /*    {  UberDoku define modules         }   */     
-import Board from "../board/Board.Module";
-
+/********* Uberdoku defined assets ************/
+import "./assets/stylesheets/base";
+/********* Vendor defined modules & assets ****/ 
+import { Promise } from "es6-promise";
+/********* UberDoku defined modules ***********/ 
+import Game from "./modules/Board/Board.Module";
 
 /***********************************************
 * Game Class                                   *
@@ -13,8 +12,8 @@ import Board from "../board/Board.Module";
 * **********************************************
 * Description: the main module for Uberdoku where
 * client-side state is generally mantained. Cross
-* polination between modules allows us to commun-
-* icate with other modules from a singular point.
+* pollination between modules allows us to commu-
+* nicate with other modules from a singular point.
 * This architectural deciscion will prove useful
 * as Uberdoku grows in both size and complexity.
 /*---------------------------------------------*/
@@ -36,7 +35,7 @@ class Game {
     /*============ Prototype Methods ==========*/
 
     /********************************************
-    * Game.Prototype.intialize is prototype func
+    * Game.Prototype.intialize is a prototype Fn
     * & can be inherited by classes it extends to
     ********************************************/
 
