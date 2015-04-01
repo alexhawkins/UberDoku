@@ -27,7 +27,7 @@ module.exports = {
         })
     ],
     entry: {
-        app: ["./src/app/UberDoku.module"]
+        app: ["./src/app/UberDoku.Module.es6"]
     },
     output: {
         path: process.env.NODE_ENV === 'production' ? './dist' : './public',
@@ -44,6 +44,10 @@ module.exports = {
                 loader: 'babel-loader',
                 exclude: /node_modules/
             }, {
+                test: /\.es6$/,
+                loader: 'babel-loader',
+                exclude: /node_modules/
+            }, {
                 test: /\.scss$/,
                 loader: ExtractTextPlugin.extract("style-loader", "css-loader!autoprefixer-loader?browsers=last 2 version!sass-loader?includePaths[]=" + path.resolve(__dirname, "./src")),
                 exclude: /node_modules/
@@ -51,11 +55,10 @@ module.exports = {
                 test: /\.html$/,
                 loader: 'raw',
                 exclude: /node_modules/
-            },
-            {
+            }, {
                 test: /index[a-z-]*\.html$/,
                 loader: 'file-loader?name=[path][name].html&context=./src',
-                 exclude: /node_modules/
+                exclude: /node_modules/
             },
             // Copy all assets in to asset folder (use hash filename)
             {
