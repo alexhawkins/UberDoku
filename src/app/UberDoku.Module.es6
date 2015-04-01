@@ -2,12 +2,12 @@
 import "./assets/stylesheets/base";
 
 /* {  utils  } */
-import { Promise } from 'es6-promise';
+import { Promise } from "es6-promise";
 
 /* {  modules  } */
 import Game        from "./modules/Game/Game.Module";
-import Footer      from "./modules/Footer/Footer.module";
-import Header      from "./modules/Header/Header.module";
+import Footer      from "./modules/Footer/Footer.Module";
+import Header      from "./modules/Header/Header.Module";
 
 /**********************************************************
  * UberDoku Class
@@ -17,8 +17,8 @@ class UberDoku {
 
     constructor() {
 
-        const vm = this;
-        vm.name  = 'UberDoku';
+        const vm = this; /* only because vm looks prettier */
+        vm.name  = "UberDoku";
 
         /**********************************************************
          * instantiate component Classes for UberDoku
