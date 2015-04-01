@@ -1,0 +1,56 @@
+{
+    "name": "UberDoku",
+    "version": "1.0.0",
+    "description": "A Sedoku Board Game in the style of Uber",
+    "main": "UberDoku.js",
+    "scripts": {
+        "build": "./node_modules/.bin/webpack -d",
+        "watch": "./node_modules/.bin/webpack -d --watch",
+        "server": "./node_modules/.bin/webpack-dev-server -d --inline --colors --display-error-details --content-base public",
+        "start": "npm install && npm run build && npm run server",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "deploy": "NODE_ENV=production webpack -p"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/alexhawkins/UberDoku.git"
+    },
+    "keywords": [
+        "uber",
+        "es6",
+        "JavaScript",
+        "sass",
+        "sedoku",
+        "jquery",
+        "modular"
+    ],
+    "author": "Alex Hawkins | 2015",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/alexhawkins/UberDoku/issues"
+    },
+    "homepage": "https://github.com/alexhawkins/UberDoku",
+
+    "author": "Alex Hawkins 2015",
+    "license": "ISC",
+    "dependencies": {
+        "es6-promise": "^2.0.1",
+        "jquery": "^2.1.3"
+    },
+    "devDependencies": {
+        "jshint": "^2.6.3",
+        "jshint-loader": "^0.8.3",
+        "raw-loader": "^0.5.1",
+        "autoprefixer-loader": "^1.2.0",
+        "babel-core": "^4.7.16",
+        "babel-loader": "^4.2.0",
+        "css-loader": "^0.9.1",
+        "extract-text-webpack-plugin": "^0.5.0",
+        "file-loader": "^0.8.1",
+        "node-sass": "^3.0.0-pre",
+        "sass-loader": "0.5.0",
+        "style-loader": "^0.9.0",
+        "webpack": "^1.7.3",
+        "webpack-dev-server": "^1.7.0"
+    }
+}
