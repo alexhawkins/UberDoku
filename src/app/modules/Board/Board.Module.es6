@@ -73,7 +73,7 @@ class Board {
 
     /*============================ Class Methods ========================*/
 
-    setListeners() {
+    _setListeners() {
         const vm = this;
     }
 
