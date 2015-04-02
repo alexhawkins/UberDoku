@@ -1,12 +1,14 @@
 /********* Uberdoku defined assets *************************************/
-import "./assets/stylesheets/base";
+
 /********* Vendor defined modules & assets *****************************/
 import {
     Promise
 }
 from "es6-promise";
 /********* UberDoku defined modules ************************************/
-import Board from "./modules/Board/Board.Module";
+import Board from "../Board/Board.Module";
+import Footer from "../Footer/Footer.Module";
+import Header from ".../Header/Header.Module";
 
 /*************************************************************************
  * Class: Game                                                           *
@@ -26,51 +28,51 @@ class Game {
      * defines the func to represent our Class. our class method
      ********************************************************************/
 
-    constructor(difficulty = 50, score = 0) {
-
+    constructor(games, Events) {
+        /* only because vm looks prettier */
         const vm = this;
-        vm.PROPS = {
-            difficulty: difficulty,
-            score: score,
-            time: 0
+        let _STATE = {
+            game: vm,
+            difficulty: 50,
+            score: 0,
+            events: Events,
+            answers: {},
+            data: {
+                allGames: [],
+                currGame: []
+            }
         };
 
-        /*******************************************************************
-         * Private Variables
-         ******************************************************************/
-
-        /*=> NOTE: WeakMap() should be used if you're truely concerned about
-             about privacy and garbage collection. We're going to use the 
-             new ES6 Map data structure since it provides many nice features
-             for finding and retrieving data. Note, a JS {} would work just 
-             as well but Map is new and cool. There is also Set() and 
-             WeakSet(). Sweet <=*/
-
-        let _allBoards = new Map();
-        let _solution = new Map();
-        let _gameBoard = new Map();
-
         /********************************************************************
-         * Getters and Setters for private variables (Below)
+         * Getters and Setters for initializing state (Below)
          *==================================================================*
          * At the very least, we can prevent direct access to data (like the
          * answers to the sedoku puzzle) by forcing you to go through custom
          * getters and setters. ES6 has built in get and set methods as well
-         * which can be useful for sharing information between modules. 
-         * 
-         * However, since our data flow is unidirectional and propagates
+         * which can be useful for sharing information between modules.
+         *
+         * However, since our data flow is unidirectional and state propagates
          * through props, such methods should not be neccessary. We only
-         * want to access state internally through the props object.
+         * want to access state internally via the props object.
          ********************************************************************/
 
-        vm.setBoards = (l) => _allBoards.set('all', l);
-        vm.getBoards = () => _allBoards;
-        vm.setSolution = (o) => _solution.set('solution', o);
-        vm.getSolution = () => _solution;
-        vm.setGame = (l) => _gameBoard.set('solution', l);
-        vm.getGame = () => _gameBoard;
+        vm.getAllGames = () => _STATE.data.allGames;
+        vm.setAllGames = (games) => _STATE.data.allGames = games;
+        vm.getCurrGame = () => _STATE.data.currGame;
+        vm.setCurrGame = (game) => _STATE.data.currGame.push(game);
+        vm.getStateOf = (property) => _STATE[property];
+        vm.setStateOf = (property, val) => _STATE[property] = val;
+        vm.getState = () => _STATE;
 
     }
+
+    /*=> NOTE: WeakMap() should be used if you're truely concerned about
+         about privacy and garbage collection. We're going to use the 
+         new ES6 Map data structure since it provides many nice features
+         for finding and retrieving data. Note, a JS {} would work just 
+         as well but Map is new and cool. There is also Set() and 
+         WeakSet(). Sweet <=*/
+
 
     /**************************************************************************
      * Game.Prototype.intialize 
@@ -78,44 +80,68 @@ class Game {
      * is a prototype Fn & can be inherited by classes it extends to
      **************************************************************************/
 
-    initialize(data) {
+    initialize(games) {
         const vm = this;
-        vm.setData(data);
+        vm.initializeState(games);
         vm._setListeners();
     }
 
     /**************************************************************************
-     * Game.Prototype.getData 
+     * Game.Prototype.initializeState
      *========================================================================*
      * 
      **************************************************************************/
-
-    getData() {
+    initializeSate(games) {
         const vm = this;
-        return uberUtils.getGames(vm.setBoardData.bind(vm));
-    }
+        let tempGames,
+            promise,
+            state;
 
-    /**************************************************************************
-     * Game.Prototype.setData 
-     *========================================================================*
-     * 
-     **************************************************************************/
+        tempGames = _.map(games, e => e);
 
-    setData(data) {
-        const vm = this;
-        let promise = new Promise(function(resolve) {
-            let allBoards = _.map(data, e => e);
-            vm.setBoards(allBoards);
-            resolve(allBoards);
+        promise = new Promise((resolve) => {
+            state = vm._setSate(tempGames);
+            resolve(state);
         });
 
-        promise
-            .then((allBoards) => vm.createSolution(allBoards))
+        return promise
+            .then((state) => vm.instantiateComponents(state))
             .catch((doh) => console.log(doh))
-            .then((solution) => vm.createGame(solution))
+            .then((modules) => vm.render(modules))
             .catch((doh) => console.log(doh))
-            .then((game) => vm.setGame(game))
-            .catch((doh) => console.log(doh));
+            .then(() => vm.Events.emit('state initialized'));
+    }
+
+    _setState(games) {
+        const vm = this;
+        let currGame;
+        vm.setAllGames(games);
+        currGame = vm.getAllGames().shift();
+        vm.setCurrGame(currGame);
+        return vm.getAllProps();
+    }
+
+    /****************************************************************
+    * instantiate component modules for Games
+    /***************************************************************/
+
+    instantiateComponents(props) {
+        const vm = this;
+        //vm.Board = new Board(props);
+        vm.Header = new Header(props);
+        vm.Footer = new Footer(props);
+        let modules = {
+            header: vm.Header,
+            footer: vm.Footer
+            //board: vm.Board
+        };
+        return modules;
+    }
+
+    render(games) {
+        //modules.board.initialize();
+        modules.footer.initialize();
+        modules.header.initialize();
     }
 
     /**************************************************************************
@@ -125,11 +151,6 @@ class Game {
      * Removes current board from Queue to prevent Ground Hog Day Effect 
      * ************************************************************************/
 
-    createSolution(allBoards) {
-        const vm = this;
-        vm.setSolution(allBoards.shift());
-        return vm.getSolution();
-    }
 
     /**************************************************************************
      * Game.prototype.createGame 
@@ -142,16 +163,7 @@ class Game {
      * ES6 makes this a breeze with native ipmort and export functionality
      ***************************************************************************/
 
-    createGame(solution) {
-        const vm = this;
 
-        let gameBoard = new Board(
-            solution,
-            vm.PROPS.difficulty
-        );
-
-        return gameBoard;
-    }
 
     /**************************************************************************
      * Game.prototype.newGame 
@@ -187,10 +199,7 @@ class Game {
 
     newGame() {
         const vm = this;
-        let allGames = vm.getBoards().get('all');
-        if allGames.length > 0
-            vm.setBoardData(all); 
-        else  /* we need an event emitter here */
+
     }
 
     /**************************************************************************

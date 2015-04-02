@@ -2,18 +2,15 @@
 /********* Uberdoku defined assets *************************************/
 import "./assets/stylesheets/base";
 import uberUtils from "./utils/uberUtils";
-
+import Events from "./utils/uberUtils";
 /********* Vendor defined modules & assets *****************************/
 import {
     Promise
 }
 from "es6-promise";
 /********* UberDoku defined modules ************************************/
-//import Board from "./modules/Board/Board.Module";
-//import Game from "./modules/Game/Game.Module";
-import Footer from "./modules/Footer/Footer.Module";
-import Header      from "./modules/Header/Header.Module";
-import EventSystem from "./utils/EventSystem";
+import Game from "./modules/Game/Game.Module";
+
 
 /************************************************************************
 * UberDoku Class                                                        *
@@ -35,38 +32,6 @@ class UberDoku {
         /* only because vm looks prettier */
         const vm = this;
         vm.Events = new EventSystem();
-        let _STATE = {
-            uberdoku : vm,
-            difficulty: 50,
-            score: 0,
-            events: vm.Events,
-            answers: {},
-            data: {
-                allGames: [],
-                currGame: []
-            }
-        };
-
-        /********************************************************************
-         * Getters and Setters for initializing state (Below)
-         *==================================================================*
-         * At the very least, we can prevent direct access to data (like the
-         * answers to the sedoku puzzle) by forcing you to go through custom
-         * getters and setters. ES6 has built in get and set methods as well
-         * which can be useful for sharing information between modules.
-         *
-         * However, since our data flow is unidirectional and state propagates
-         * through props, such methods should not be neccessary. We only
-         * want to access state internally via the props object.
-         ********************************************************************/
-
-        vm.getAllGames = () => _STATE.data.allGames;
-        vm.setAllGames = (games) => _STATE.data.allGames = games;
-        vm.getCurrGame = () => _STATE.data.currGame;
-        vm.setCurrGame = (game) => _STATE.data.currGame.push(game);
-        vm.getProps = (property) => _STATE[property];
-        vm.setProps = (property, val) => _STATE[property] = val;
-        vm.getAllProps = () => _STATE;
     }
 
     /*======================== Prototype Methods =======================*/
@@ -94,7 +59,7 @@ class UberDoku {
 
     initialize() {
         const vm = this;
-        return uberUtils.getGames(vm.onLoad.bind(vm));
+        return uberUtils.getGames(vm.onDataLoad.bind(vm));
 
         /* Here, we are fetching json game data. Note that we are binding 
          * context to the _loadGames method. For those familiar with ES6,
@@ -104,62 +69,25 @@ class UberDoku {
 
     }
 
-    onLoad(games) {
-
+    onDataLoad(games) {
         const vm = this;
-        let tempGames, 
-            promise, 
-            allProps;
-
-        tempGames = _.map(games, e => e);
-
-        promise = new Promise((resolve) => {
-            allProps = vm.setProperties(tempGames);
-            resolve(allProps);
-        });
-
-        return promise
-            .then((props) => vm.instantiate(props))
-            .catch((doh) => console.log(doh))
-            .then((modules) => vm.render(modules))
-            .catch((doh) => console.log(doh))
-            .then(() => vm.Events.emit('loaded'));
+        let state = vm.getState = () => _STATE;
+        vm.Game = new Game(games, vm.events);
+        vm.Game.initialize();
     }
 
-    setProperties(games) {
+
+    setListeners() {
         const vm = this;
-        let currGame;
-        vm.setAllGames(games);
-        currGame = vm.getAllGames().shift();
-        vm.setCurrGame(currGame);
-        return vm.getAllProps();
+        let events = getStateOf('events');
+        events.on('newgame', (args) => {
+                let gamesLeft = args.getAllGames();
+                if (gamesLeft.length > 0)
+                    vm.onLoad(gamesLeft); // render a new page
+            }
+        }
     }
-
-    /****************************************************************
-    * instantiate module Classes for UberDoku
-    /***************************************************************/
-
-    instantiate(props) {
-        const vm = this;
-        console.log(props);
-        vm.Header = new Header(props);
-        //vm.Game = new Game(props);
-        //vm.Board = new Board(props);
-        vm.Footer = new Footer(props);
-        let modules = { header: vm.Header };
-        return modules;
-    }
-
-    render(modules) {
-        modules.header.initialize();
-        // modules.game.initialize();
-        // modules.board.initialize();
-        // modules.footer.initialize();
-        // modules.footer.initialize();
-    }
-
 }
-
 /**************************************************************************
  * Load Game when ready and initialze our UberDoku Class
  * ***********************************************************************/
