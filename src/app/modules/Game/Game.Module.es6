@@ -31,7 +31,7 @@ class Game {
     constructor() {
         /* only because vm looks prettier */
         const vm = this;
-        let _STATE = {
+        let _D = {
             game: vm,
             difficulty: 50,
             score: 0,
@@ -42,7 +42,6 @@ class Game {
                 currGame: new Map()
             }
         };
-        console.log(_STATE.data.allGames);
         /********************************************************************
          * Getters and Setters for initializing state (Below)
          *==================================================================*
@@ -79,13 +78,20 @@ class Game {
      *========================================================================*
      * is a prototype Fn & can be inherited by classes it extends to
      **************************************************************************/
-
+    
     initialize(games) {
         console.log(games);
         const vm = this;
-        vm.initializeState(games);
+        vm.getInitialState(games);
         //vm._setListeners();
     }
+
+    getInitialState() {
+
+    }
+
+
+    getDefaultProps()
 
     /**************************************************************************
      * Game.Prototype.initializeState

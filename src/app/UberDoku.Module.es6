@@ -1,7 +1,7 @@
 "use strict";
 /********* Uberdoku defined assets *************************************/
 import "./assets/stylesheets/base";
-import EventSystem from "./utils/uberUtils";
+import EventSystem from "./utils/EventSystem";
 import uberUtils from "./utils/uberUtils";
 
 /********* UberDoku defined modules ************************************/
@@ -27,8 +27,17 @@ class UberDoku {
     constructor() {
         /* only because vm looks prettier */
         const vm = this;
-        
+        vm.props = new Map().set('default', vm.getDefaultProps());
+        vm.options = new Map.set('default', vm.getDefaultOptions());
     }
+
+    return uberUtils.getGames(vm.onDataLoad.bind(vm));
+
+    /* Here, we are fetching json game data. Note that we are binding 
+     * context to the _loadGames method. For those familiar with ES6,
+     * this might seem strange. The use of bind is typically uneccessary as
+     * the functionality is native. However, because of the nature of
+     * this callback, bind comes in handy here.*/
 
     /*======================== Prototype Methods =======================*/
 
@@ -55,20 +64,49 @@ class UberDoku {
 
     initialize() {
         const vm = this;
-        return uberUtils.getGames(vm.onDataLoad.bind(vm));
+        vm.setListeners();
+        vm.render();
+    }
 
-        /* Here, we are fetching json game data. Note that we are binding 
-         * context to the _loadGames method. For those familiar with ES6,
-         * this might seem strange. The use of bind is typically uneccessary as
-         * the functionality is native. However, because of the nature of
-         * this callback, bind comes in handy here.*/
+    getDefaultProps() {
+        return {
 
+            difficulty: 25,
+            score: 0,
+            events: new EventsSystem(),
+            stores: {
+                answers: new Map(),
+                games: new Map(),
+                board: new Map()
+            }
+        };
+    }
+
+    getDefaultOptions() {
+        return {
+
+            name: 'uberdoku',
+            template: ''
+            el: '#app',
+            colors: {
+                uberRed: "#D03E27",
+                uberBlack: "#06060F",
+                uberNavy: "#070716",
+                uberBlue: "#1FBAD6",
+                uberBlue2: "#1CA8C3"
+            };
+        }
     }
 
     onDataLoad(games) {
         const vm = this;
         vm.Game = new Game();
         vm.Game.initialize(games);
+    }
+
+    render() {
+        vm.Game = new Game(vm.options, vm.props);
+        vm.Game.initialize();
     }
 
 
