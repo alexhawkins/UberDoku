@@ -1,0 +1,69 @@
+@import "utilities/normalize";
+@import "config/colors";
+@import "config/flexbox";
+@import "config/config";
+*,
+*:after,
+*:before {
+    @include box-sizing(border-box);
+}
+
+html {
+    background-color: $uberBlack;
+}
+
+body {
+    @include font-size(16, 16);
+    @include line-height (9);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    padding: 0;
+}
+
+a:focus {
+    outline: 0;
+}
+
+.wrapper {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    font-weight: bold;
+    text-align: center;
+}
+
+.wrapper > * {
+    padding: 10px;
+    padding-top: 0;
+    flex: 1 100%;
+}
+
+.footer {
+    background: $uberBlack;
+}
+
+.main {
+    text-align: left;
+    background: $uberBlack;
+}
+
+@media all and (min-width: 600px) {
+    .aside {
+        flex: 1 auto;
+    }
+}
+
+@media all and (min-width: 800px) {
+    .main {
+        flex: 3 0px;
+    }
+    .main {
+        order: 2;
+    }
+    .footer {
+        order: 4;
+    }
+}

@@ -61,7 +61,6 @@ class Game {
         vm.get = (val, k) => vm[val].get(val).get(k);
         vm.set = (val, k, v) => vm[val].get(val).set(k, v);
         vm.stores = () => vm.state.get("state").stores;
-
         vm.getInitialState();
 
     }
@@ -88,14 +87,14 @@ class Game {
     setStores(data, tag) {
         const vm = this;
         if (Array.isArray(data)) {
-            if (tag === "games")
+            if (tag === "games") {
                 vm.state.get("state").stores.games.push(data);
-            else if (tag === "board")
-                vm.state.get("state").stores.board.push(data.shift());
+            }
+            vm.state.get("state").stores.board.push(data.shift());
         } else {
             throw new TypeError();
         }
-        return data;
+        return vm.state;
     }
 
     /**************************************************************************
@@ -115,8 +114,6 @@ class Game {
         return promise
             .then((games) => vm.setStores(games, "games"))
             .catch((doh) => console.log(doh))
-            .then((games) => vm.setStores(games, "board"))
-            .catch((doh) => console.log(doh))
             .then((props) => vm.instantiateComponents(props))
             .catch((doh) => console.log(doh))
             .then((modules) => vm.render(modules))
@@ -131,7 +128,7 @@ class Game {
     /***************************************************************/
 
     instantiateComponents(props) {
-        console.log("comp", props);
+        console.log('props', props);
         const vm = this;
         let modules = {};
 

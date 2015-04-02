@@ -24,12 +24,14 @@ class Board {
      * apps relevent properties
      *********************************************************************/
 
-    constructor(props) {
+    constructor(props, options) {
+
         console.log('BOARD', props);
         const vm = this;
-
-        let _PROPS = props;
-        vm.el = "#board";
+        vm.props = props;
+        
+        vm.options =
+            vm.el = "#board";
         vm.template = boardTpl;
         vm.output = "";
 
