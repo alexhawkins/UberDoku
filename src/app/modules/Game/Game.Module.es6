@@ -6,7 +6,7 @@ import {
 }
 from "es6-promise";
 /********* UberDoku defined modules ************************************/
-import Board from "../Board/Board.Module";
+import Board from  "../Board/Board.Module";
 import Footer from "../Footer/Footer.Module";
 import Header from "../Header/Header.Module";
 import Events from "../../utils/EventSystem";
@@ -35,7 +35,7 @@ class Game {
             game: vm,
             difficulty: 50,
             score: 0,
-            events: Events,
+            events: new Events(),
             answers: {},
             data: {
                 allGames: new Map(),
@@ -132,10 +132,13 @@ class Game {
         console.log('comp', props);
         const vm = this;
         let modules = {};
-        //vm.Board = new Board(props);
+
+        vm.Board = new Board(props);
         vm.Header = new Header(props);
         vm.Footer = new Footer(props);
+
         return modules = {
+            "board"  : vm.Board,
             "header" : vm.Header,
             "footer" : vm.Footer
         };

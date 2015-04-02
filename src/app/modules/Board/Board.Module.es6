@@ -1,17 +1,18 @@
 /********* Uberdoku defined modules & assets ***************************/
+"use strict";
 import "./Board.Style.scss";
-import boardTemplate from "./Board.Template";
+import boardTpl from "./Board.Template";
 
 /************************************************************************
-* Class: Game                                                           *
-* File: Game.Module.es6                                                 *
-* =======================================================================
-* Description: the Board module is where all the magic of the game
-* happens. This is where the actual Game Board is created and various
-* calculation regarding the state of the game are made. It is our 
-* workhorse method. Eventually, we will want to break the Board Module 
-* into further sub components/modules.
-*************************************************************************/
+ * Class: Game                                                           *
+ * File: Game.Module.es6                                                 *
+ * =======================================================================
+ * Description: the Board module is where all the magic of the game
+ * happens. This is where the actual Game Board is created and various
+ * calculation regarding the state of the game are made. It is our 
+ * workhorse method. Eventually, we will want to break the Board Module 
+ * into further sub components/modules.
+ *************************************************************************/
 
 class Board {
 
@@ -23,31 +24,21 @@ class Board {
      * apps relevent properties
      *********************************************************************/
 
-    constructor() {
-
+    constructor(props) {
+        console.log('BOARD', props);
         const vm = this;
 
-        vm.props = {
-            name: "Board",
-            el: "#board",
-            template: boardTpl,
-            userAnswers: new Map(),
-            output: "",
-            difficulty: difficulty
-        }
-
-        /**********************************************************
-         * Private Variables
-         **********************************************************/
-
-        let _board = board;
-
-        /**********************************************************
-         * Getters and Setters for private variables
-         **********************************************************/
-        vm.getBoard = () => _board.get("solution");
-
+        let _PROPS = props;
+        vm.el = "#board";
+        vm.templat = boardTpl;
+        vm.output = "";
     }
+
+
+    /**********************************************************
+     * Getters and Setters for private variables
+     **********************************************************/
+
 
     /*======================== Prototype Methods =======================*/
 
@@ -58,6 +49,7 @@ class Board {
      *********************************************************************/
 
     initialize() {
+        console.log('hello');
         const vm = this;
     }
 
