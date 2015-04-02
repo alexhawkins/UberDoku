@@ -14,8 +14,8 @@ import headerTpl from "./Header.Template";
 class Header {
 
     /********************************************************************
-     * Header.Prototype.constructor defines the func to represent our Class, 
-     * our Header class method
+     * Header.Prototype.constructor defines the func to represent our
+     * Class, our Header class method
      ********************************************************************/
 
     constructor(difficulty=50) {

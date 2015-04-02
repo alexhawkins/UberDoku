@@ -1,9 +1,7 @@
 /********* Uberdoku defined assets *************************************/
 import "./assets/stylesheets/base";
 /********* Vendor defined modules & assets *****************************/
-import {
-    Promise
-}
+import { Promise }
 from "es6-promise";
 /********* UberDoku defined modules ************************************/
 import Game from "./modules/Board/Board.Module";
@@ -77,7 +75,7 @@ class UberDoku {
          * context to the _loadGames method. For those familiar with ES6, 
          * this might strange. The use of bind is typically uneccessary as
          * the functionality is native. However, because of the nature of 
-         * this callback, bind comes in handy as always.*/ 
+         * this callback, bind comes in handy as always.*/
 
         return uberUtils.getGames(vm._loadGames.bind(vm));
     }
