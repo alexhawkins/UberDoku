@@ -15,7 +15,6 @@ class EventSystem {
         vm._maxListeners = DEFAULT_MAX_LISTENERS
         vm._events = {}
     }
-
     on(type, listener) {
         if (typeof listener != "function") {
             throw new TypeError();
@@ -27,6 +26,9 @@ class EventSystem {
         listeners.push(listener)
         if (listeners.length > this._maxListeners) {
             error(
+                "possible memory leak, added %i %s listeners, " +
+                "use EventEmitter#setMaxListeners(number) if you " +
+                "want to increase the limit (%i now)",
                 listeners.length,
                 type,
                 this._maxListeners
@@ -34,8 +36,15 @@ class EventSystem {
         }
         return this
     }
+    once(type, listener) {
+        var eventsInstance = this
 
-
+        function onceCallback() {
+            eventsInstance.off(type, onceCallback)
+            listener.apply(null, arguments)
+        }
+        return this.on(type, onceCallback)
+    }
     off(type, ...args) {
         if (args.length == 0) {
             this._events[type] = null
@@ -55,7 +64,6 @@ class EventSystem {
         listeners.splice(indexOfListener, 1)
         return this
     }
-
     emit(type, ...args) {
         var listeners = this._events[type]
         if (!listeners || !listeners.length) {

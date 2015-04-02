@@ -1,13 +1,9 @@
 "use strict";
 /********* Uberdoku defined assets *************************************/
 import "./assets/stylesheets/base";
+import EventSystem from "./utils/uberUtils";
 import uberUtils from "./utils/uberUtils";
-import Events from "./utils/uberUtils";
-/********* Vendor defined modules & assets *****************************/
-import {
-    Promise
-}
-from "es6-promise";
+
 /********* UberDoku defined modules ************************************/
 import Game from "./modules/Game/Game.Module";
 
@@ -31,7 +27,7 @@ class UberDoku {
     constructor() {
         /* only because vm looks prettier */
         const vm = this;
-        vm.Events = new EventSystem();
+        
     }
 
     /*======================== Prototype Methods =======================*/
@@ -71,21 +67,20 @@ class UberDoku {
 
     onDataLoad(games) {
         const vm = this;
-        let state = vm.getState = () => _STATE;
-        vm.Game = new Game(games, vm.events);
-        vm.Game.initialize();
+        vm.Game = new Game();
+        vm.Game.initialize(games);
     }
 
 
     setListeners() {
         const vm = this;
-        let events = getStateOf('events');
-        events.on('newgame', (args) => {
-                let gamesLeft = args.getAllGames();
-                if (gamesLeft.length > 0)
-                    vm.onLoad(gamesLeft); // render a new page
-            }
-        }
+        // let events = getStateOf('events');
+        // events.on('newgame', (args) => {
+        //         let gamesLeft = args.getAllGames();
+        //         if (gamesLeft.length > 0)
+        //             vm.onLoad(gamesLeft); // render a new page
+        //     }
+        // }
     }
 }
 /**************************************************************************

@@ -8,8 +8,8 @@ from "es6-promise";
 /********* UberDoku defined modules ************************************/
 import Board from "../Board/Board.Module";
 import Footer from "../Footer/Footer.Module";
-import Header from ".../Header/Header.Module";
-
+import Header from "../Header/Header.Module";
+import Events from "../../utils/EventSystem";
 /*************************************************************************
  * Class: Game                                                           *
  * File: Game.Module.es6                                                 *
@@ -28,7 +28,7 @@ class Game {
      * defines the func to represent our Class. our class method
      ********************************************************************/
 
-    constructor(games, Events) {
+    constructor() {
         /* only because vm looks prettier */
         const vm = this;
         let _STATE = {
@@ -38,11 +38,11 @@ class Game {
             events: Events,
             answers: {},
             data: {
-                allGames: [],
-                currGame: []
+                allGames: new Map(),
+                currGame: new Map()
             }
         };
-
+        console.log(_STATE.data.allGames);
         /********************************************************************
          * Getters and Setters for initializing state (Below)
          *==================================================================*
@@ -56,10 +56,10 @@ class Game {
          * want to access state internally via the props object.
          ********************************************************************/
 
-        vm.getAllGames = () => _STATE.data.allGames;
-        vm.setAllGames = (games) => _STATE.data.allGames = games;
-        vm.getCurrGame = () => _STATE.data.currGame;
-        vm.setCurrGame = (game) => _STATE.data.currGame.push(game);
+        vm.getAllGames = () => _STATE.data.allGames.get('all');
+        vm.setAllGames = (games) => _STATE.data.allGames.set('all', games);
+        vm.getCurrGame = () => _STATE.data.currGame.get('current');
+        vm.setCurrGame = (game) => _STATE.data.currGame.set('current', game);
         vm.getStateOf = (property) => _STATE[property];
         vm.setStateOf = (property, val) => _STATE[property] = val;
         vm.getState = () => _STATE;
@@ -81,9 +81,10 @@ class Game {
      **************************************************************************/
 
     initialize(games) {
+        console.log(games);
         const vm = this;
         vm.initializeState(games);
-        vm._setListeners();
+        //vm._setListeners();
     }
 
     /**************************************************************************
@@ -91,34 +92,36 @@ class Game {
      *========================================================================*
      * 
      **************************************************************************/
-    initializeSate(games) {
+    initializeState(games) {
         const vm = this;
-        let tempGames,
-            promise,
-            state;
 
-        tempGames = _.map(games, e => e);
-
-        promise = new Promise((resolve) => {
-            state = vm._setSate(tempGames);
-            resolve(state);
+        let promise = new Promise(function(resolve) {
+            let allGames = _.map(games, e => e);
+            vm.setAllGames(allGames);
+            resolve(allGames)
         });
 
-        return promise
-            .then((state) => vm.instantiateComponents(state))
+        console.lgo
+        promise
+            .then((games) => vm._setState(games))
+            .catch((doh) => console.log(doh))
+            .then((props) => vm.instantiateComponents(props))
             .catch((doh) => console.log(doh))
             .then((modules) => vm.render(modules))
-            .catch((doh) => console.log(doh))
-            .then(() => vm.Events.emit('state initialized'));
+            .catch((doh) => console.log(doh));
     }
+
 
     _setState(games) {
         const vm = this;
-        let currGame;
-        vm.setAllGames(games);
-        currGame = vm.getAllGames().shift();
+        console.log(games);
+        console.log(vm.getAllGames());
+        let currGame = vm.getAllGames().shift();
+        console.log('gcur', currGame);
         vm.setCurrGame(currGame);
-        return vm.getAllProps();
+        console.log('cur', vm.getCurrGame());
+        console.log(vm.getState());
+        return vm.getState();
     }
 
     /****************************************************************
@@ -126,23 +129,24 @@ class Game {
     /***************************************************************/
 
     instantiateComponents(props) {
+        console.log('comp', props);
         const vm = this;
+        let modules = {};
         //vm.Board = new Board(props);
         vm.Header = new Header(props);
         vm.Footer = new Footer(props);
-        let modules = {
-            header: vm.Header,
-            footer: vm.Footer
-            //board: vm.Board
+        return modules = {
+            "header" : vm.Header,
+            "footer" : vm.Footer
         };
-        return modules;
     }
 
-    render(games) {
-        //modules.board.initialize();
-        modules.footer.initialize();
-        modules.header.initialize();
-    }
+    render(modules) {
+        const vm = this;
+        for(let key in modules){
+            modules[key].initialize();
+        }
+    };
 
     /**************************************************************************
      * Game.prototype.createSolution

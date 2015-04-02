@@ -20,14 +20,10 @@ class Header {
 
     constructor(props) {
         console.log(props);
+        let _PROPS = props;
         const vm = this;
-        // vm.name = "Header";
-        // vm.props = {
-        //     difficulty: difficulty,
-        //     el = "#header",
-        //     template = headerTpl
-        //};
-
+        vm.el = "#header",
+        vm.template = headerTpl
 
     }
 
@@ -52,6 +48,7 @@ class Header {
      *********************************************************************/
 
     render() {
+        console.log('header rendered');
         const vm = this;
         return $(vm.props.el).html(vm.props.template);
     }

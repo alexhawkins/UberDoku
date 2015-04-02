@@ -23,11 +23,8 @@ class Footer {
 
     constructor(props) {
         console.log(props);
-        console.log(props.uberdoku.set)
         const vm = this;
-        /* shared private props */
         let _PROPS = props;
-        /*Footer Module properties */
         vm.el = "#footer",
         vm.template = footerTpl
        
@@ -44,6 +41,7 @@ class Footer {
 
 
     initialize() {
+        console.log('yo');
         const vm = this;
         vm.render();
         vm.setListeners();

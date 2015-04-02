@@ -99,7 +99,7 @@ var config = {
             '.css',
             '.html'
         ],
-        modulesDirectories: ['src/app', 'node_modules', 'web_modules']
+        modulesDirectories: ['src/app', 'node_modules']
     }
 
 };
