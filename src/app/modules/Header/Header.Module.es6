@@ -18,8 +18,8 @@ class Header {
      * Class, our Header class method
      ********************************************************************/
 
-    constructor(difficulty=50) {
-
+    constructor(props) {
+        console.log(props);
         const vm = this;
         // vm.name = "Header";
         // vm.props = {

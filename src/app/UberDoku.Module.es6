@@ -91,57 +91,45 @@ class UberDoku {
 
     initialize() {
         const vm = this;
+        return uberUtils.getGames(vm._loadGames.bind(vm));
 
-        /* here, we are fethcing json game data. Note that we are binding 
+        /* Here, we are fethcing json game data. Note that we are binding 
          * context to the _loadGames method. For those familiar with ES6,
          * this might seem strange. The use of bind is typically uneccessary as
          * the functionality is native. However, because of the nature of
          * this callback, bind comes in handy as always.*/
 
-        return vm.Promise(vm.getData())
+    }
+
+    _loadGames(games) {
+
+        const vm = this;
+        let tempGames, 
+            promise, 
+            allProps;
+
+        tempGames = _.map(games, e => e);
+
+        promise = new Promise((resolve) => {
+            allProps = vm.setProperties(tempGames);
+            console.log('PRP', allProps);
+            resolve(allProps);
+        });
+
+        return promise
             .then((props) => vm._instantiate(props))
             .catch((doh) => console.log(doh))
             .then((modules) => vm.render(modules))
             .catch((doh) => console.log(doh))
-            .then(() => vm.Events.emit("loaded"));
-
-
-
-
-        //         .then(()     => {  vm.Header.initialize();  })
-        //         .catch((doh) => {  console.log(doh);        })
-        //         .then(()     => {  vm.Game.initialize();  })
-        //         .catch((doh) => {  console.log(doh);        })
-        //         .then(()     => {  vm.Footer.initialize();    })
-        //         .catch((doh) => {  console.log(doh);        })
-        //         .then(()     => {  console.log('loaded');   });
+            .then(() => console.log('loaded'));
 
         //.then(() => vm.Events.emit('loaded'));
     }
 
-    getData() {
+    setProperties(games) {
         const vm = this;
-        return uberUtils.getGames(vm._loadGames.bind(vm));
-    }
-
-
-    Promise(val, err) {
-        return new Promise(function(resolve, reject) {
-            if (err) reject(err);
-            else resolve(val);
-        });
-    }
-
-
-    _loadGames(games) {
-        const vm = this;
-        let tempGames,
-            allGames,
-            currGame;
-
-        tempGames = _.map(games, e => e);
-        vm.setAllGames(tempGames);
-        allGames = vm.getAllGames();
+        let currGame;
+        vm.setAllGames(games);
         currGame = vm.getAllGames().shift();
         vm.setCurrGame(currGame);
         return vm.getAllProps();
@@ -151,21 +139,18 @@ class UberDoku {
     * instantiate module Classes for UberDoku
     /***************************************************************/
     _instantiate(props) {
+        console.log('PROPS', props);
         const vm = this;
         vm.Header = new Header(props);
         //vm.Game = new Game(props);
         //vm.Board = new Board(props);
         //vm.Footer = new Footer(props);
-        let modules = {
-            header: vm.Header,
-            game: vm.Game,
-            board: vm.Board,
-            footer: vm.Footer
-        };
+        let modules = { header: vm.Header };
         return modules;
     }
 
     render(modules) {
+        const vm = this;
         modules.header.initialize();
         // modules.game.initialize();
         // modules.board.initialize();
@@ -185,5 +170,4 @@ $(document).ready(function() {
 });
 
 
-export
-default UberDoku;
+export default UberDoku;
