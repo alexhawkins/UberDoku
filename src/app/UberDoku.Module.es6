@@ -51,7 +51,7 @@ class UberDoku {
 
     /*********************************************************************
      * UberDoku.Prototype.intialize is a prototype Fn that allows us to 
-     * initialize specific vars and methods upon Class instantiation. 
+     * initialize the state of our game upon Class instantiation. 
      * In this case, we are grabbing the game data we need via an ajax
      * request; passing it a callback (our _loadGames method). We then
      * use es6 native promises to make sure each component is ready before
@@ -61,17 +61,24 @@ class UberDoku {
      *
      * NOTE: It's important that we load all of our initial data here in our
      * UberDoku container component. This allows us to initalize state in one
-     * place. Above, not that we created a props object which we will use to 
+     * place. Above, note that we created a props object which we will use to 
      * trickle down state to children components. 
      * 
      * Establishing a unidirectional flow of (as best we can w/o the use of 
      * any framework) is essential for keeping track of our data as Uberdoku
-     * grows in complexity. All data will propagated  through our props var 
+     * grows in complexity. All data will be propagated through our props var 
      * which updates all of the Modules that are affected.   
      *********************************************************************/
 
     initialize() {
         const vm = this;
+
+        /* here, we are fethcing json game data. Note that we are binding 
+         * context to the _loadGames method. For those familiar with ES6, 
+         * this might strange. The use of bind is typically uneccessary as
+         * the functionality is native. However, because of the nature of 
+         * this callback, bind comes in handy as always.*/ 
+
         return uberUtils.getGames(vm._loadGames.bind(vm));
     }
 
@@ -98,7 +105,7 @@ class UberDoku {
 }
 
 /**************************************************************************
- * Load Game when ready and initialze our Class
+ * Load Game when ready and initialze our UberDoku Class
  * ***********************************************************************/
 
 $(document).ready(function() {
