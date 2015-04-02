@@ -1,16 +1,16 @@
 "use strict";
 /********* Uberdoku defined assets *************************************/
 import "./assets/stylesheets/base";
-import uberUtils from "../../utils/uberUtils";
+import uberUtils from "./utils/uberUtils";
 /********* Vendor defined modules & assets *****************************/
 import {
     Promise
 }
 from "es6-promise";
 /********* UberDoku defined modules ************************************/
-import Board from "./modules/Board/Board.Module";
-import Game from "./modules/Game/Game.Module";
-import Footer from "./modules/Footer/Footer.Module";
+//import Board from "./modules/Board/Board.Module";
+//import Game from "./modules/Game/Game.Module";
+//import Footer from "./modules/Footer/Footer.Module";
 import Header from "./modules/Header/Header.Module";
 
 

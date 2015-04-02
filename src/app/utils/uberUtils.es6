@@ -25,10 +25,10 @@ let uberUtils = {
             type: "GET",
             crossDomain: true,
             dataType: "json",
-            success: (data) => callback(data);
-            error: (err) => console.log(err);
+            success: (data) => callback(data),
+            error: (err) => console.log(err)
         });
-    };
+    }
 };
 
 export default uberUtils;
