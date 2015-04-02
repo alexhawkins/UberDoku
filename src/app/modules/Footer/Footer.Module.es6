@@ -18,10 +18,14 @@ class Footer {
      * our Footer class method
      ********************************************************************/
 
-    constructor() {
-
+    constructor(difficulty = 50) {
         const vm = this;
-        vm.name = 'Footer';
+        vm.props = {
+            name: "Footer",
+            difficulty: difficulty,
+            el = "#footer",
+            template = footerTpl
+        }
 
     }
 
@@ -34,8 +38,11 @@ class Footer {
      * be rendered to the View.
      *********************************************************************/
 
+
     initialize() {
         const vm = this;
+        vm.render();
+        vm.setListeners();
     }
 
     /*********************************************************************
@@ -45,29 +52,13 @@ class Footer {
      * other modules that Footer is exported too 
      *********************************************************************/
 
-    constructor(difficulty=50) {
-        const vm = this;
-        vm.props = {
-            difficulty : difficulty,
-            el = $('#footer'),
-            template = footerTpl
-        }
-
-    }
-
-    initialize() {
-        const vm = this;
-        vm.render();
-        vm.setListeners();
-    }
-
-    
-
     render() {
-            const vm = this;
-            return $(vm.props.el).html(vm.props.template);
+        const vm = this;
+        return $(vm.props.el).html(vm.props.template);
     }
+
     /*============================ Class Methods ========================*/
+
     setListeners() {
         const vm = this;
     }

@@ -32,8 +32,6 @@ class Game {
              events: events;
              score: score;
              time: 0;
-        vm.difficulty = difficulty;
-
         }
        
 

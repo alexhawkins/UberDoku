@@ -27,10 +27,10 @@ class Board {
 
         vm.props = {
             name: "Board",
-            el: $("#board"),
+            el: "#board",
             template: boardTpl,
             userAnswers: new Map(),
-            output: '',
+            output: "",
             difficulty: difficulty
         }
 
@@ -43,7 +43,7 @@ class Board {
         /**********************************************************
          * Getters and Setters for private variables
          **********************************************************/
-        vm.getBoard = () => _board.get('solution');
+        vm.getBoard = () => _board.get("solution");
 
     }
 
@@ -68,7 +68,7 @@ class Board {
 
     render() {
         const vm = this;
-        return $(vm.el).html(vm.output);
+        return $(vm.props.el).html(vm.props.output);
     }
 
     /*============================ Class Methods ========================*/
