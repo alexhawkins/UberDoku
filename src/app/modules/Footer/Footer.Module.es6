@@ -13,18 +13,23 @@ import footerTpl from "./Footer.Template";
 
 class Footer {
 
-    /********************************************************************
-     * Footer.Prototype.constructor defines the func to represent our Class, 
-     * our Footer class method
-     ********************************************************************/
+    
+    /*********************************************************************
+     * Footer.Prototype.constructor
+     * ==================================================================*
+     * Defines func to represent our Footer Class. Our class method which
+     * contains a PROPS object: a snapshot of the current state of our 
+     * entire apps relevent properties
+     *********************************************************************/
 
-    constructor(difficulty = 50) {
+    constructor() {
         const vm = this;
-        vm.props = {
-            name: "Footer",
+
+        vm.el = "#footer",
+        vm.template = footerTpl
+
+        vm.PROPS = {
             difficulty: difficulty,
-            el = "#footer",
-            template = footerTpl
         }
 
     }
@@ -54,7 +59,7 @@ class Footer {
 
     render() {
         const vm = this;
-        return $(vm.props.el).html(vm.props.template);
+        return $(vm.el).html(vm.template);
     }
 
     /*============================ Class Methods ========================*/

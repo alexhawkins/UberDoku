@@ -3,23 +3,25 @@ import "./Board.Style.scss";
 import boardTemplate from "./Board.Template";
 
 /************************************************************************
-* Board Class                                                          *
-*************************************************************************
-* File: Board.Module.es6
-* ***********************************************************************
+* Class: Game                                                           *
+* File: Game.Module.es6                                                 *
+* =======================================================================
 * Description: the Board module is where all the magic of the game
 * happens. This is where the actual Game Board is created and various
-* calculation regarding the state of the game are made.  It is our 
-* workhorse method. Eventually, we will want to break the Boord Module into 
-* further sub modules.
-/*---------------------------------------------------------------------*/
+* calculation regarding the state of the game are made. It is our 
+* workhorse method. Eventually, we will want to break the Board Module 
+* into further sub components/modules.
+*************************************************************************/
 
 class Board {
 
-    /********************************************************************
-     * Board.Prototype.constructor defines the func to represent our Class, 
-     * our Board class method
-     ********************************************************************/
+    /*********************************************************************
+     * Board.Prototype.constructor
+     * ==================================================================*
+     * defines the func to represent our Class. Our class method which
+     * contains a PROPS object: a snapshot of the current state of our 
+     * apps relevent properties
+     *********************************************************************/
 
     constructor() {
 

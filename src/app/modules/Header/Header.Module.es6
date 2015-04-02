@@ -21,12 +21,12 @@ class Header {
     constructor(difficulty=50) {
 
         const vm = this;
-        vm.name = "Header";
-        vm.props = {
-            difficulty: difficulty,
-            el = "#header",
-            template = headerTpl
-        }
+        // vm.name = "Header";
+        // vm.props = {
+        //     difficulty: difficulty,
+        //     el = "#header",
+        //     template = headerTpl
+        //};
 
 
     }
@@ -40,6 +40,7 @@ class Header {
      *********************************************************************/
 
     initialize() {
+        console.log('hello');
         const vm = this;
     }
 

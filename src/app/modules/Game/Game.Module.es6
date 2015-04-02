@@ -1,6 +1,5 @@
 /********* Uberdoku defined assets *************************************/
 import "./assets/stylesheets/base";
-import uberUtils from "../../utils/uberUtils";
 /********* Vendor defined modules & assets *****************************/
 import {
     Promise
@@ -10,7 +9,7 @@ from "es6-promise";
 import Board from "./modules/Board/Board.Module";
 
 /*************************************************************************
- * Clase: Game                                                           *
+ * Class: Game                                                           *
  * File: Game.Module.es6                                                 *
  * =======================================================================
  * Description: The main module for Uberdoku where client-side state is 
@@ -19,23 +18,22 @@ import Board from "./modules/Board/Board.Module";
  * will prove useful as Uberdoku grows in both size & complexity.
  *************************************************************************/
 
-
 class Game {
 
     /*********************************************************************
      * Game.Prototype.constructor
+     * ==================================================================*
      * defines the func to represent our Class. our class method
      ********************************************************************/
 
     constructor(difficulty = 50, score = 0) {
 
         const vm = this;
-        vm.props = {
-            name: 'Game',
+        vm.PROPS = {
             difficulty: difficulty,
-            score: score;
-            time: 0;
-        }
+            score: score,
+            time: 0
+        };
 
         /*******************************************************************
          * Private Variables
@@ -138,9 +136,9 @@ class Game {
      *========================================================================*
      * creates new instance of Board Class. Note how we pass props upon 
      * instantiation instead initializing state within the actual board class. 
-     * This would be fine but it become difficult to keep track of state with 
+     * This would be fine but it becomes difficult to keep track of state with 
      * increased app complexity. It's worth spending the time to think about 
-     * state and separate deterministic app componenets into seperated modules.
+     * state and separate deterministic app componenets into seperate modules.
      * ES6 makes this a breeze with native ipmort and export functionality
      ***************************************************************************/
 
@@ -149,7 +147,7 @@ class Game {
 
         let gameBoard = new Board(
             solution,
-            vm.props.difficulty
+            vm.PROPS.difficulty
         );
 
         return gameBoard;
@@ -175,15 +173,16 @@ class Game {
      * *=============================*
      * Also note that we could totally import uberUtils into our Game module
      * and make the AJAX request internally. That's what I initially did. 
-     * But hmm....we've...wouldn't this be cheating? Because we already decided
-     * to maintain state in our UberDoku module!. So that is where it must be 
-     * changed. 
+     * But hmm...wouldn't this be cheating? Because we already decided
+     * to maintain state in our UberDoku module! So that is where it must be 
+     * changed. And that settles that.
      * *=============================*
-     * It makes sense if you think about it. Everytime there is a relevant change
-     * of state in our app, the other components relying on that data also 
-     * need to be updated. We could cross-pollinate between modules but as the
-     * app grows in size, it would become difficult to know what was changing
-     * what and where. Maintaining state in one place makes things easy on us.  
+     * Hey, but tt makes sense if you think about it. Everytime there is a 
+     * relevant change of state in our app, the other components relying on 
+     * that data also need to be updated. We could cross-pollinate between 
+     * modules but as the app scales, it would become difficult to know what 
+     * was changing what and where. Maintaining state in one place makes 
+     * things easy on us. We know exactly where to look=> UberDoku.module  
      ***************************************************************************/
 
     newGame() {
@@ -193,10 +192,6 @@ class Game {
             vm.setBoardData(all); 
         else  /* we need an event emitter here */
     }
-
-    /*============================ Static Class Methods ========================*/
-
-
 
     /**************************************************************************
      * _SetListeners

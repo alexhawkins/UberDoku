@@ -6,7 +6,7 @@
     "scripts": {
         "build": "./node_modules/.bin/webpack -d",
         "watch": "./node_modules/.bin/webpack -d --watch",
-        "server": "./node_modules/.bin/webpack-dev-server --devtool eval --progress --color --inline --display-error-details --content-base public",
+        "server": "./node_modules/.bin/webpack-dev-server --d eval --progress --color --inline --display-error-details --content-base public",
         "start": "npm install && npm run build && npm run server",
         "test": "echo \"Error: no test specified\" && exit 1",
         "deploy": "NODE_ENV=production webpack -p"
