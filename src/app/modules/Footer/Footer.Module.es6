@@ -13,7 +13,6 @@ import footerTpl from "./Footer.Template";
 
 class Footer {
 
-    
     /*********************************************************************
      * Footer.Prototype.constructor
      * ==================================================================*
@@ -22,16 +21,16 @@ class Footer {
      * entire apps relevent properties
      *********************************************************************/
 
-    constructor() {
+    constructor(props) {
+        console.log(props);
+        console.log(props.uberdoku.set)
         const vm = this;
-
+        /* shared private props */
+        let _PROPS = props;
+        /*Footer Module properties */
         vm.el = "#footer",
         vm.template = footerTpl
-
-        vm.PROPS = {
-            difficulty: difficulty,
-        }
-
+       
     }
 
     /*======================== Prototype Methods =======================*/

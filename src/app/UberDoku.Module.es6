@@ -2,6 +2,7 @@
 /********* Uberdoku defined assets *************************************/
 import "./assets/stylesheets/base";
 import uberUtils from "./utils/uberUtils";
+
 /********* Vendor defined modules & assets *****************************/
 import {
     Promise
@@ -10,9 +11,9 @@ from "es6-promise";
 /********* UberDoku defined modules ************************************/
 //import Board from "./modules/Board/Board.Module";
 //import Game from "./modules/Game/Game.Module";
-//import Footer from "./modules/Footer/Footer.Module";
-import Header from "./modules/Header/Header.Module";
-
+import Footer from "./modules/Footer/Footer.Module";
+import Header      from "./modules/Header/Header.Module";
+import EventSystem from "./utils/EventSystem";
 
 /************************************************************************
 * UberDoku Class                                                        *
@@ -33,10 +34,12 @@ class UberDoku {
     constructor() {
         /* only because vm looks prettier */
         const vm = this;
-        let state = {
+        vm.Events = new EventSystem();
+        let _STATE = {
+            uberdoku : vm,
             difficulty: 50,
             score: 0,
-            events: null,
+            events: vm.Events,
             answers: {},
             data: {
                 allGames: [],
@@ -57,20 +60,20 @@ class UberDoku {
          * want to access state internally via the props object.
          ********************************************************************/
 
-        vm.getAllGames = () => state.data.allGames;
-        vm.setAllGames = (games) => state.data.allGames = games;
-        vm.getCurrGame = () => state.data.currGame;
-        vm.setCurrGame = (game) => state.data.currGame.push(game);
-        vm.getProps = (property) => state[property];
-        vm.setProps = (property, val) => state[property] = val;
-        vm.getAllProps = () => state;
+        vm.getAllGames = () => _STATE.data.allGames;
+        vm.setAllGames = (games) => _STATE.data.allGames = games;
+        vm.getCurrGame = () => _STATE.data.currGame;
+        vm.setCurrGame = (game) => _STATE.data.currGame.push(game);
+        vm.getProps = (property) => _STATE[property];
+        vm.setProps = (property, val) => _STATE[property] = val;
+        vm.getAllProps = () => _STATE;
     }
 
     /*======================== Prototype Methods =======================*/
 
     /*********************************************************************
      * UberDoku.Prototype.intialize is a prototype Fn that allows us to
-     * initialize the state of our game upon Class instantiation.
+     * initialize the _STATE of our game upon Class instantiation.
      * In this case, we are grabbing the game data we need via an ajax
      * request; passing it a callback (our _loadGames method). We then
      * use es6 native promises to make sure each component is ready before
@@ -91,17 +94,17 @@ class UberDoku {
 
     initialize() {
         const vm = this;
-        return uberUtils.getGames(vm._loadGames.bind(vm));
+        return uberUtils.getGames(vm.onLoad.bind(vm));
 
-        /* Here, we are fethcing json game data. Note that we are binding 
+        /* Here, we are fetching json game data. Note that we are binding 
          * context to the _loadGames method. For those familiar with ES6,
          * this might seem strange. The use of bind is typically uneccessary as
          * the functionality is native. However, because of the nature of
-         * this callback, bind comes in handy as always.*/
+         * this callback, bind comes in handy here.*/
 
     }
 
-    _loadGames(games) {
+    onLoad(games) {
 
         const vm = this;
         let tempGames, 
@@ -112,18 +115,15 @@ class UberDoku {
 
         promise = new Promise((resolve) => {
             allProps = vm.setProperties(tempGames);
-            console.log('PRP', allProps);
             resolve(allProps);
         });
 
         return promise
-            .then((props) => vm._instantiate(props))
+            .then((props) => vm.instantiate(props))
             .catch((doh) => console.log(doh))
             .then((modules) => vm.render(modules))
             .catch((doh) => console.log(doh))
-            .then(() => console.log('loaded'));
-
-        //.then(() => vm.Events.emit('loaded'));
+            .then(() => vm.Events.emit('loaded'));
     }
 
     setProperties(games) {
@@ -139,12 +139,13 @@ class UberDoku {
     * instantiate module Classes for UberDoku
     /***************************************************************/
 
-    _instantiate(props) {
+    instantiate(props) {
         const vm = this;
+        console.log(props);
         vm.Header = new Header(props);
         //vm.Game = new Game(props);
         //vm.Board = new Board(props);
-        //vm.Footer = new Footer(props);
+        vm.Footer = new Footer(props);
         let modules = { header: vm.Header };
         return modules;
     }
