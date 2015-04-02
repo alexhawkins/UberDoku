@@ -138,8 +138,8 @@ class UberDoku {
     /****************************************************************
     * instantiate module Classes for UberDoku
     /***************************************************************/
+
     _instantiate(props) {
-        console.log('PROPS', props);
         const vm = this;
         vm.Header = new Header(props);
         //vm.Game = new Game(props);
@@ -150,7 +150,6 @@ class UberDoku {
     }
 
     render(modules) {
-        const vm = this;
         modules.header.initialize();
         // modules.game.initialize();
         // modules.board.initialize();
