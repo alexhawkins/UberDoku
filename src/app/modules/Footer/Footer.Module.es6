@@ -1,6 +1,6 @@
 /********* Uberdoku defined modules & assets ***************************/
 import "./Footer.Style.scss";
-import headerTemplate from "./Footer.Template";
+import footerTpl from "./Footer.Template";
 
 /************************************************************************
 * Footer Class                                                          *
@@ -45,11 +45,32 @@ class Footer {
      * other modules that Footer is exported too 
      *********************************************************************/
 
-    render() {
+    constructor(difficulty=50) {
         const vm = this;
+        vm.props = {
+            difficulty : difficulty,
+            el = $('#footer'),
+            template = footerTpl
+        }
+
     }
 
+    initialize() {
+        const vm = this;
+        vm.render();
+        vm.setListeners();
+    }
+
+    
+
+    render() {
+            const vm = this;
+            return $(vm.props.el).html(vm.props.template);
+    }
     /*============================ Class Methods ========================*/
+    setListeners() {
+        const vm = this;
+    }
 
 }
 

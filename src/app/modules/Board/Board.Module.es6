@@ -24,7 +24,26 @@ class Board {
     constructor() {
 
         const vm = this;
-        vm.name = 'Board';
+
+        vm.props = {
+            name: "Board",
+            el: $("#board"),
+            template: boardTpl,
+            userAnswers: new Map(),
+            output: '',
+            difficulty: difficulty
+        }
+
+        /**********************************************************
+         * Private Variables
+         **********************************************************/
+
+        let _board = board;
+
+        /**********************************************************
+         * Getters and Setters for private variables
+         **********************************************************/
+        vm.getBoard = () => _board.get('solution');
 
     }
 
@@ -49,9 +68,14 @@ class Board {
 
     render() {
         const vm = this;
+        return $(vm.el).html(vm.output);
     }
 
     /*============================ Class Methods ========================*/
+
+    setListeners() {
+        const vm = this;
+    }
 
 }
 

@@ -1,6 +1,6 @@
 /********* Uberdoku defined modules & assets ***************************/
 import "./Header.Style.scss";
-import headerTemplate from "./Header.Template";
+import headerTpl from "./Header.Template";
 
 /************************************************************************
 * Header Class                                                          *
@@ -18,10 +18,16 @@ class Header {
      * our Header class method
      ********************************************************************/
 
-    constructor() {
+    constructor(difficulty=50) {
 
         const vm = this;
-        vm.name = 'Header';
+        vm.name = "Header";
+        vm.props = {
+            difficulty: difficulty,
+            el = "#header",
+            template = headerTpl
+        }
+
 
     }
 
@@ -46,9 +52,14 @@ class Header {
 
     render() {
         const vm = this;
+        return $(vm.props.el).html(vm.props.template);
     }
 
     /*============================ Class Methods ========================*/
+
+    _setListeners() {
+        const vm = this;
+    }
 
 }
 

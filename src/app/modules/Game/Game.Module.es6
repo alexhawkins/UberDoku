@@ -23,10 +23,19 @@ class Game {
      * our class method
      ********************************************************************/
 
-    constructor() {
+    constructor(difficulty=50, score=0) {
 
         const vm = this;
-        vm.name = 'Game';
+        vm.props = {
+             name : 'Game',
+             difficulty: difficulty,
+             events: events;
+             score: score;
+             time: 0;
+        vm.difficulty = difficulty;
+
+        }
+       
 
     }
 
@@ -43,6 +52,9 @@ class Game {
 
     /*============================ Class Methods ========================*/
 
+    _setListeners() {
+        const vm = this;
+    }
 }
 
 
