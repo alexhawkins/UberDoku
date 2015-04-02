@@ -24,7 +24,7 @@ class Board {
      * apps relevent properties
      *********************************************************************/
 
-    constructor(props){
+    constructor(props) {
         console.log('BOARD', props);
         const vm = this;
 
@@ -33,7 +33,11 @@ class Board {
         vm.template = boardTpl;
         vm.output = "";
 
-        vm.getAllGames = () => _STATE.data.allGames.get('all');
+        /**********************************************************
+         * Getters and Setters for private variables
+         **********************************************************/
+
+        vm.getAllGames = () => _P.data.allGames.get('all');
         vm.setAllGames = (games) => _STATE.data.allGames.set('all', games);
         vm.getCurrGame = () => _STATE.data.currGame.get('current');
         vm.setCurrGame = (game) => _STATE.data.currGame.set('current', game);
@@ -42,9 +46,6 @@ class Board {
         vm.getState = () => _STATE;
     }
 
-    /**********************************************************
-     * Getters and Setters for private variables
-     **********************************************************/
 
 
     /*======================== Prototype Methods =======================*/

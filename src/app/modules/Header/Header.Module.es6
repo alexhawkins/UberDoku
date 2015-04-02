@@ -19,9 +19,10 @@ class Header {
      ********************************************************************/
 
     constructor(props) {
-        console.log(props);
-        let _PROPS = props;
+        console.log('HEADER', props);
+        
         const vm = this;
+        vm.props = props;
         vm.el = "#header",
         vm.template = headerTpl
 

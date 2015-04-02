@@ -1,15 +1,15 @@
 /********* Uberdoku defined assets *************************************/
-
+"use strict";
 /********* Vendor defined modules & assets *****************************/
 import {
     Promise
 }
 from "es6-promise";
 /********* UberDoku defined modules ************************************/
-import Board from  "../Board/Board.Module";
+import Board from "../Board/Board.Module";
 import Footer from "../Footer/Footer.Module";
 import Header from "../Header/Header.Module";
-import Events from "../../utils/EventSystem";
+import uberUtils from "../../utils/uberUtils";
 /*************************************************************************
  * Class: Game                                                           *
  * File: Game.Module.es6                                                 *
@@ -28,20 +28,23 @@ class Game {
      * defines the func to represent our Class. our class method
      ********************************************************************/
 
-    constructor() {
+    constructor(props, options, state) {
+
         /* only because vm looks prettier */
+
         const vm = this;
-        let _D = {
-            game: vm,
-            difficulty: 50,
-            score: 0,
-            events: new Events(),
-            answers: {},
-            data: {
-                allGames: new Map(),
-                currGame: new Map()
-            }
-        };
+
+        vm.props = props;
+        vm.options = options;
+        vm.state = state;
+
+        /* Here, we are fetching json game data. Note that we are binding 
+         * context to the _loadGames method. For those familiar with ES6,
+         * this might seem strange. The use of bind is typically uneccessary as
+         * the functionality is native. However, because of the nature of
+         * this callback, bind comes in handy here.*/
+
+
         /********************************************************************
          * Getters and Setters for initializing state (Below)
          *==================================================================*
@@ -55,18 +58,16 @@ class Game {
          * want to access state internally via the props object.
          ********************************************************************/
 
-        vm.getAllGames = () => _STATE.data.allGames.get('all');
-        vm.setAllGames = (games) => _STATE.data.allGames.set('all', games);
-        vm.getCurrGame = () => _STATE.data.currGame.get('current');
-        vm.setCurrGame = (game) => _STATE.data.currGame.set('current', game);
-        vm.getStateOf = (property) => _STATE[property];
-        vm.setStateOf = (property, val) => _STATE[property] = val;
-        vm.getState = () => _STATE;
+        vm.get = (val, k) => vm[val].get(val).get(k);
+        vm.set = (val, k, v) => vm[val].get(val).set(k, v);
+        vm.stores = () => vm.state.get("state").stores;
+
+        vm.getInitialState();
 
     }
 
-    /*=> NOTE: WeakMap() should be used if you're truely concerned about
-         about privacy and garbage collection. We're going to use the 
+    /*=> NOTE: WeakMap() should be used if you"re truely concerned about
+         about privacy and garbage collection. We"re going to use the 
          new ES6 Map data structure since it provides many nice features
          for finding and retrieving data. Note, a JS {} would work just 
          as well but Map is new and cool. There is also Set() and 
@@ -78,56 +79,51 @@ class Game {
      *========================================================================*
      * is a prototype Fn & can be inherited by classes it extends to
      **************************************************************************/
-    
-    initialize(games) {
-        console.log(games);
-        const vm = this;
-        vm.getInitialState(games);
-        //vm._setListeners();
-    }
 
     getInitialState() {
-
+        const vm = this;
+        return uberUtils.getGames(vm.extractData.bind(vm));
     }
 
-
-    getDefaultProps()
+    setStores(data, tag) {
+        const vm = this;
+        if (Array.isArray(data)) {
+            if (tag === "games")
+                vm.state.get("state").stores.games.push(data);
+            else if (tag === "board")
+                vm.state.get("state").stores.board.push(data.shift());
+        } else {
+            throw new TypeError();
+        }
+        return data;
+    }
 
     /**************************************************************************
      * Game.Prototype.initializeState
      *========================================================================*
      * 
      **************************************************************************/
-    initializeState(games) {
+    extractData(allGames) {
         const vm = this;
+        /* shuffle games to prevent duplicates for repeat visitors */
+        let games = _.shuffle(_.map(allGames, e => e));
 
         let promise = new Promise(function(resolve) {
-            let allGames = _.map(games, e => e);
-            vm.setAllGames(allGames);
-            resolve(allGames)
+            resolve(games);
         });
 
-        console.lgo
-        promise
-            .then((games) => vm._setState(games))
+        return promise
+            .then((games) => vm.setStores(games, "games"))
+            .catch((doh) => console.log(doh))
+            .then((games) => vm.setStores(games, "board"))
             .catch((doh) => console.log(doh))
             .then((props) => vm.instantiateComponents(props))
             .catch((doh) => console.log(doh))
             .then((modules) => vm.render(modules))
-            .catch((doh) => console.log(doh));
-    }
-
-
-    _setState(games) {
-        const vm = this;
-        console.log(games);
-        console.log(vm.getAllGames());
-        let currGame = vm.getAllGames().shift();
-        console.log('gcur', currGame);
-        vm.setCurrGame(currGame);
-        console.log('cur', vm.getCurrGame());
-        console.log(vm.getState());
-        return vm.getState();
+            .catch((doh) => console.log(doh))
+            .then(() => vm._setListeners())
+            .catch((doh) => console.log(doh))
+            .then(() => console.log("game loaded"));
     }
 
     /****************************************************************
@@ -135,7 +131,7 @@ class Game {
     /***************************************************************/
 
     instantiateComponents(props) {
-        console.log('comp', props);
+        console.log("comp", props);
         const vm = this;
         let modules = {};
 
@@ -143,19 +139,23 @@ class Game {
         vm.Header = new Header(props);
         vm.Footer = new Footer(props);
 
-        return modules = {
-            "board"  : vm.Board,
-            "header" : vm.Header,
-            "footer" : vm.Footer
+        modules = {
+            "board": vm.Board,
+            "header": vm.Header,
+            "footer": vm.Footer
         };
+        console.log('mod', modules);
+        return modules;
     }
 
     render(modules) {
         const vm = this;
-        for(let key in modules){
+        console.log(modules);
+        for (let key in modules) {
+            console.log(modules[key]);
             modules[key].initialize();
         }
-    };
+    }
 
     /**************************************************************************
      * Game.prototype.createSolution
@@ -171,7 +171,7 @@ class Game {
      * creates new instance of Board Class. Note how we pass props upon 
      * instantiation instead initializing state within the actual board class. 
      * This would be fine but it becomes difficult to keep track of state with 
-     * increased app complexity. It's worth spending the time to think about 
+     * increased app complexity. It"s worth spending the time to think about 
      * state and separate deterministic app componenets into seperate modules.
      * ES6 makes this a breeze with native ipmort and export functionality
      ***************************************************************************/
@@ -186,19 +186,19 @@ class Game {
      * first in the queue as the new game. If none are left, we need
      * to make another request to our data Store. 
      * *=============================*
-     * So what's happening here??? 
-     * We're changing the state of our entire app. So we somehow need to get 
+     * So what"s happening here??? 
+     * We"re changing the state of our entire app. So we somehow need to get 
      * back to the UberDoku module to make a new Ajax Request. Implementing 
      * a custom Event Emitter would prove useful here. Then attaching a 
      * listener to the UberDoku class to recieve notifcations of state change. 
      * *=============================*
-     * Of course, we could use JQuery for our eventing system but what's the
-     * fun in that. Let's create our own basic Eventing System with basic on
+     * Of course, we could use JQuery for our eventing system but what"s the
+     * fun in that. Let"s create our own basic Eventing System with basic on
      * and emit functionality.
      * *=============================*
      * Also note that we could totally import uberUtils into our Game module
-     * and make the AJAX request internally. That's what I initially did. 
-     * But hmm...wouldn't this be cheating? Because we already decided
+     * and make the AJAX request internally. That"s what I initially did. 
+     * But hmm...wouldn"t this be cheating? Because we already decided
      * to maintain state in our UberDoku module! So that is where it must be 
      * changed. And that settles that.
      * *=============================*
@@ -220,7 +220,7 @@ class Game {
      *========================================================================*/
 
     _setListeners() {
-        const vm = this;
+        //const vm = this;
     }
 }
 
