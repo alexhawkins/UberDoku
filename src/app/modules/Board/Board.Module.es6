@@ -46,8 +46,6 @@ class Board {
          **********************************************************/
         vm.getB = () => _board;
 
-
-        vm.initialize();
     }
 
 
@@ -61,6 +59,7 @@ class Board {
      *********************************************************************/
 
     initialize() {
+        console.log('board init');
         const vm = this;
         vm._setListeners();
         vm.createRows();
@@ -77,6 +76,7 @@ class Board {
 
 
     createRows() {
+        console.log('rows');
         const vm = this;
         let board = [];
         board = vm.getB();
@@ -138,7 +138,8 @@ class Board {
                 vm._clearAnswers(indentifier);
             } else if (!vm.props.toggle) {
                 color = key ? 'white' : vm.opt.colors.uberRed;
-            }
+            }   
+            console.log(idenifier);
             //helpers.colorizeOrClear(indentifier, color, clear, toggle);
         });
     }
@@ -183,7 +184,9 @@ class Board {
 
     render() {
         const vm = this;
-        return $(vm.opt.el).html(vm.props.output);
+        console.log('el', vm.opt.el);
+        console.log('out', vm.opt.output);
+        return $(vm.opt.el).html(vm.opt.output);
     }
 
 }

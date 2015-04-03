@@ -145,7 +145,6 @@ class Game {
 
     render(modules) {
         const vm = this;
-        console.log(modules);
         for (let key in modules) {
             console.log(modules[key]);
             modules[key].initialize();
