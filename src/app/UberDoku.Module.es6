@@ -64,12 +64,13 @@ class UberDoku {
     getDefaultProps() {
         return {
             clear: false,
+            toggle: false,
             newgame: false,
             difficulty: 25,
             score: 0,
             events: new EventSystem(),
             stores: {
-                answers: [],
+                answers: new Map(),
                 games: [],
                 board: []
             }

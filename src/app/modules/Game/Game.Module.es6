@@ -28,7 +28,7 @@ class Game {
      * defines the func to represent our Class. our class method
      ********************************************************************/
 
-    constructor(props, options, state) {
+    constructor(options, props, state) {
 
         /* only because vm looks prettier */
 
@@ -128,20 +128,18 @@ class Game {
     /***************************************************************/
 
     instantiateComponents(props) {
-        console.log('props', props);
         const vm = this;
+        let propState = props.get("state");
+        let defaultOptions = vm.options.get("options");
         let modules = {};
 
-        vm.Board = new Board(props);
-        vm.Header = new Header(props);
-        vm.Footer = new Footer(props);
+        vm.Board = new Board(propState, defaultOptions);
+        vm.Header = new Header(propState, defaultOptions);
+        vm.Footer = new Footer(propState, defaultOptions);
 
-        modules = {
-            "board": vm.Board,
-            "header": vm.Header,
-            "footer": vm.Footer
-        };
-        console.log('mod', modules);
+        modules.board = vm.Board;
+        modules.header =vm.Header;
+        modules.footer = vm.Footer;
         return modules;
     }
 
@@ -209,7 +207,7 @@ class Game {
 
     newGame() {
         const vm = this;
-
+        return true;
     }
 
     /**************************************************************************
@@ -218,6 +216,7 @@ class Game {
 
     _setListeners() {
         //const vm = this;
+        return true;
     }
 }
 
