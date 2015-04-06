@@ -11,37 +11,39 @@ var config = {
     },
     context: __dirname,
     devServer: {
-        historyApiFallback: true,
         contentBase: 'public',
         stats: {
             colors: true,
             reasons: true
         }
     },
-    //devtool: 'source-map',
+    devtool: 'source-map',
     debug: true,
     cache: false,
 
 
     entry: {
         app: ["./src/app/UberDoku.Module.es6"],
-        vendor: ['jquery', 'underscore', 'es6-promise']
+        vendor: ['jquery', 'lodash', 'es6-promise']
     },
 
     output: {
         path: process.env.NODE_ENV === 'production' ? './dist' : './public',
         filename: 'uberdoku.bundle.js',
-        //sourceMapFilename: 'bundle.js.map',
+        //sourceMapFilename: 'uberdoku.bundle.js.map',
         publicPath: '/public/'
     },
 
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.bundle.js', Infinity),
-        new ExtractTextPlugin("uberdoku.bundle.css", {
-            allChunks: true
+        new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.bundle.js', {
+            minChunks: Infinity
         }),
+        new ExtractTextPlugin("uberdoku.bundle.css"),
+        // , {
+        //     //allChunks: true
+        // }),
         new webpack.ProvidePlugin({
-            _: "underscore",
+            _: "lodash",
             $: "jquery",
             jQuery: "jquery",
             "window.jQuery": "jquery",
@@ -82,8 +84,8 @@ var config = {
     },
     resolve: {
         alias: {
-            'jquery': node_modules + '/jquery/dist/jquery.min.js',
-            'underscore': node_modules + '/underscore/underscore-min.js',
+            'jquery': node_modules + 'jquery/dist/jquery.min.js',
+            'lodash': __dirname + '/src/app/utils/lodash.min.js',
             'es6-promise': node_modules + '/es6-promise/dist/es6-promise.min.js'
         },
         extensions: [
@@ -99,13 +101,13 @@ var config = {
             '.css',
             '.html'
         ],
-        modulesDirectories: ['src/app', 'node_modules']
+        modulesDirectories: ['node_modules']
     }
 
 };
 
 config.addVendor('jquery', path.resolve(node_modules, 'jquery/dist/jquery.min.js'));
-config.addVendor('underscore', node_modules + '/underscore/underscore-min.js');
+config.addVendor('lodash', __dirname + '/src/app/utils/lodash.min.js');
 config.addVendor('es6-promise', node_modules + '/es6-promise/dist/es6-promise.min.js');
 
 

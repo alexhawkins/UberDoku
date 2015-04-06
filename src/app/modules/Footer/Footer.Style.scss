@@ -1,0 +1,72 @@
+@import "../../assets/stylesheets/config/colors";
+@import "../../assets/stylesheets/config/config";
+@import "../../assets/stylesheets/config/flexbox";
+
+#footer{
+    opacity: 0;
+}
+
+.flex-container.footer {
+    @include flexbox;
+    @include flex(1);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    -webkit-flex-flow: row wrap;
+    justify-content: center;
+}
+
+.flex-item.footer {
+    @include font-size(14, 16);
+    @include line-height(16);
+    @include stop-select;
+    @include flexbox;
+    padding: 0;
+    width: 15%;
+    max-height: 50px;
+    min-width: 100px;
+    margin-top: 10px;
+    margin-right: 10px;
+    color: white;
+    font-weight: 200;
+    text-align: center;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid $uberBlue;
+    background-color: $uberNavyBlack;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+
+.flex-item.footer:hover {
+    @include stop-select;
+    background: darken($uberBlue, 2%);
+    color: $uberBlack;
+    cursor: pointer;
+}
+
+.flex-item.footer:active {
+    @include stop-select;
+    background: darken($uberBlue, 20%);
+    color: $uberBlack;
+}
+
+.fill-height-or-more {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    > div {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        > div {
+            // also flex items 
+        }
+    }
+}

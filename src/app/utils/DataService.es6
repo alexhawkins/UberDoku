@@ -7,7 +7,7 @@
 * repeatedly by n different parts of the app. 
 /*---------------------------------------------------------------------*/
 
-let uberUtils = {
+let dataservice = {
 
     /*********************************************************************
      * Description: getGames retreives pre-made sedoku game solutions using our 
@@ -31,4 +31,4 @@ let uberUtils = {
     }
 };
 
-export default uberUtils;
+export default dataservice;

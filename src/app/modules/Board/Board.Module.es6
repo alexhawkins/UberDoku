@@ -1,12 +1,12 @@
 /********* Uberdoku defined modules & assets ***************************/
 "use strict";
-import "./Board.Style.scss";
-//import helpers from "../../utils/helpers.es6";
+//import "./Board.Style.scss";
+import helpers from "/../../utils/helpers.es6";
 import boardTpl from "./Board.Template";
 
 /************************************************************************
- * Class: Game                                                           *
- * File: Game.Module.es6                                                 *
+ * Class: Board                                                          *
+ * File: Board.Module.es6                                                 *
  * =======================================================================
  * Description: the Board module is where all the magic of the game
  * happens. This is where the actual Game Board is created and various
@@ -26,9 +26,13 @@ class Board {
      *********************************************************************/
 
     constructor(props, options) {
-
+        console.log(props);
         const vm = this;
-
+        let answer = {
+                isValid: null,
+                value: null,
+                location: [null, null]
+        };
         /* PROPERTIES */
         vm.props = props;
         vm.props.answers = vm.props.stores.answers;
@@ -61,7 +65,7 @@ class Board {
     initialize() {
         console.log('board init');
         const vm = this;
-        vm._setListeners();
+        //vm._setListeners();
         vm.createRows();
         return vm.render();
     }
@@ -86,7 +90,7 @@ class Board {
 
     createRow(row, rowId) {
         const vm = this;
-        vm.opt.output += '<div class="board-container">';
+        vm.opt.output += `<div class="board-container">`;
 
         row.forEach((col, colId) => {
             vm.opt.output += vm.createCell(rowId, colId, col);
@@ -130,24 +134,23 @@ class Board {
         const vm = this;
         let clear = vm.props.clear;
         let toggle = vm.props.toggle;
-       
+
         let color = this.opt.colors.uberBlack;
         vm.userAnswers.forEach((key, value) => {
-            let indentifier = `${value}`;
+            let identity = `${value}`;
             if (clear) {
-                vm._clearAnswers(indentifier);
+                vm._clearAnswers(identity);
             } else if (!vm.props.toggle) {
                 color = key ? 'white' : vm.opt.colors.uberRed;
-            }   
-            console.log(idenifier);
-            //helpers.colorizeOrClear(indentifier, color, clear, toggle);
+            }
+            console.log(identity);
+            helpers.colorizeOrClear(identity, color, clear, toggle);
         });
     }
 
 
-    colorizeOrClear(indentifier, color, clear, toggle)  {
-        let toggle = toggle;
-        let element = document.getElementById(indentifier);
+    colorizeOrClear(identity, color, clear, toggle) {
+        let element = document.getElementById(identity);
         element.style.backgroundColor = color;
         element.style.weight = 'bold';
         element.style.color = color === 'white' ? '#070713' : 'white';
@@ -162,7 +165,7 @@ class Board {
     _evaluateInput(e) {
         const vm = this;
         let identifier = e.target.id;
-        if (Number.isNaN(document.getElementById(identifier).value))
+        if (isNaN(document.getElementById(identifier).value))
             document.getElementById(identifier).value = '';
         let userInput = e.target.value;
         let correctAnwser = identifier.split(',');

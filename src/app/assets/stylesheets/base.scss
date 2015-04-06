@@ -2,6 +2,7 @@
 @import "config/colors";
 @import "config/flexbox";
 @import "config/config";
+
 *,
 *:after,
 *:before {
@@ -14,7 +15,7 @@ html {
 
 body {
     @include font-size(16, 16);
-    @include line-height (9);
+    @include line-height(9);
     font-family: "Helvetica Neue", Arial, sans-serif;
     padding: 0;
 }
