@@ -1,6 +1,5 @@
 import "./board.style";
 import helpers from "../../utils/helpers";
-//import cellTpl from "./cell/cell.module";
 /**********************************************************
  * Class Board
  ***********************************************************/
@@ -11,9 +10,8 @@ class Board {
         this.userAnswers = new Map();
         this.output = '';
         this.events = events;
-        this.el = $('#board');
+        this.el = '#board';
         this.difficulty = difficulty;
-
 
         /**********************************************************
          * Private Variables
@@ -29,7 +27,8 @@ class Board {
     }
 
     initialize() {
-        if (!this.getBoard().length) return;
+        if (!this.getBoard()
+            .length) return;
         this._setListeners();
         this.createRows()
         return this.render();
@@ -53,9 +52,11 @@ class Board {
         let section = '';
         let difficulty = this.difficulty;
         if (difficulty >= 50) difficulty = difficulty - 30;
-        let readOnly = (Math.floor(Math.random() * 100) - 20 > difficulty) ? true : false;
-        if ((rowId < 3 || rowId > 5) && (colId < 3 || colId > 5)) section = "new-section";
-        else if ((rowId > 2 && rowId < 6) && (colId > 2 && colId < 6)) section = "new-section";
+        let readOnly = (Math.floor(Math.random() * 100) - 20 > difficulty) ?
+            true : false;
+        if ((rowId < 3 || rowId > 5) && (colId < 3 || colId > 5)) section ="new-section";
+        else if ((rowId > 2 && rowId < 6) && (colId > 2 && colId < 6))
+            section = "new-section";
         value = readOnly ? (' value=' + value + ' readonly=true  class="board only-nums ' + section + '"') : ' class="board guess only-nums ' + section + '"';
         return '<input type="text" id="cell-' + rowId + '-' + colId + '"' + value + ' maxlength="1"/>';
 
@@ -75,20 +76,19 @@ class Board {
 
         this.userAnswers.forEach((key, value) => {
             let el = document.getElementById(value);
-            let color = el.classList.contains("new-section") ? '#1FBAD6' : '#006679';
+            let color = 'white';
             if (clear) this._clearAnswers(value);
             /* if not attempting to clear the board or 
             and not on keydown after checking answers, set new cell color */
-            else if (!toggle) color = key ? 'white' : '#FF0000';
+            else if (!toggle) color = key ? '#00E031' : '#FF1800';
             this._colorizeOrClear(el, color, toggle, clear);
         });
     }
 
 
     _colorizeOrClear(el, color, toggle, clear = false) {
-        el.style.borderColor = color;
-        el.style.weight = 'bold';
-        //element.style.color = color === 'white' ? '#070713' : 'white';
+        el.style.color = color;
+        el.style.weight = 900;
         if (clear) {
             el.value = '';
         }
@@ -100,13 +100,17 @@ class Board {
 
     _evaluateInput(e) {
         let identifier = e.target.id;
-        if (isNaN(document.getElementById(identifier).value))
-            document.getElementById(identifier).value = '';
+        if (isNaN(document.getElementById(identifier)
+            .value))
+            document.getElementById(identifier)
+            .value = '';
         let userInput = e.target.value;
         let correctAnwser = _.rest(identifier.split('-'));
         let validationKeys = correctAnwser.map(e => parseInt(e, 10));
-        let isValid = this.validation(validationKeys, parseInt(userInput, 10));
-        if (userInput !== '' && !document.getElementById(identifier).readOnly)
+        let isValid = this.validation(validationKeys, parseInt(userInput,
+            10));
+        if (userInput !== '' && !document.getElementById(identifier)
+            .readOnly)
             this.answerTracker(identifier, isValid);
     }
 
@@ -120,7 +124,8 @@ class Board {
     }
 
     render() {
-        return $(this.el).html(this.output);
+        return $(this.el)
+            .html(this.output);
     }
 
 }
