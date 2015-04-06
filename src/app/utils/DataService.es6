@@ -21,10 +21,10 @@ let dataservice = {
      *********************************************************************/
     getGames: (callback) => {
         $.ajax({
-            url: "api/data/games.json",
-            type: "GET",
+            url: 'api/data/games.json',
+            type: 'GET',
             crossDomain: true,
-            dataType: "json",
+            dataType: 'json',
             success: (data) => callback(data),
             error: (err) => console.log(err)
         });

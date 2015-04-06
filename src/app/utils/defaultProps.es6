@@ -1,3 +1,8 @@
+/**
+ * 
+ *  @augments App, Game, Footer, Header, Board
+ */
+
 let defaultProps = {
     userAnswers: new Map(),
     difficulty: 50,

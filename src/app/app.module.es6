@@ -1,25 +1,40 @@
-"use strict";
-/* {  assets  } */
-import "./assets/stylesheets/base";
-import dataservice from "./utils/DataService";
-import defaultProps from "./utils/defaultProps";
-/* {  utils  } */
+'use strict';
+import './assets/stylesheets/base';
+import dataservice from './utils/DataService';
+import defaultProps from './utils/defaultProps';
+
 import {
     Promise
 }
 from 'es6-promise';
 
-/* {  modules  } */
-import Game from "./modules/game/game.module";
-import Footer from "./modules/footer/footer.module";
-import Header from "./modules/header/header.module";
-import EventSystem from "./utils/EventSystem";
+import Game from './modules/game/game.module';
+import Footer from './modules/footer/footer.module';
+import Header from './modules/header/header.module';
+import EventSystem from './utils/EventSystem';
 
-/**********************************************************
- * Sedoku Class
- ***********************************************************/
+/**************************************************************************
+ * @class  App 
+ * @module   { Object } Game The record set's id number.
+ * @module   { Object } Footer      [description]
+ * @module   { Object } Footer      [description]
+ * @module   { Object } EvenSystem   [description]
+ * @property { Array  } [games] [description]
+ * @property { Board  } [board] [description]
+ * @property { Object } [solution] [description]
+ **************************************************************************/
 
 class App {
+
+    /**************************************************************************
+     * @constructor 
+     * @param    { Object } props The record set's id number.
+     * @param    { Object } events      [description]
+     * @property { Number } [difficulty]     [description]
+     * @property { Array  } [games] [description]
+     * @property { Board  } [board] [description]
+     * @property { Object } [solution] [description]
+     **************************************************************************/
 
     constructor() {
 
@@ -30,16 +45,25 @@ class App {
         };
 
         this.events = new EventSystem();
+        /** @function */
         this.service = dataservice.getGames;
 
         let _props = defaultProps;
 
 
-        /* initialize components for Sedoku */
+        /* initialize modules for App */
         this.initialize(modules, _props);
     }
 
+    /**
+     * [initialize description]
+     * @param  {[type]} modules [description]
+     * @param  {[type]} props   [description]
+     * @return {[type]}         [description]
+     */
+    
     initialize(modules, props) {
+        /** @function */
         let getMoreGames = this.getData;
 
         this.Header = new modules.Header(
@@ -59,20 +83,25 @@ class App {
         );
 
         return this.getData();
-        // this.Header = new Header(this.Events, this.difficulty, this.STORE);
-        // this.Game = new Game(this.Events, this.difficulty);
-        // this.Footer = new Footer(this.Events, this.difficulty);
-        
     }
 
-    getData(){
-        return this.service(this._handleRequest.bind(this));
+    /**
+     * [getData description]
+     * @return {[type]} [description]
+     */
+    
+    getData() {
+        return this.service(this.handleRequest.bind(this));
     }
 
 
-    _handleRequest(data) {
-        /* Promise.all takes an array of promises and creates a 
-           promise that fulfills when all modules successfully load. */
+    /**
+     * [handleRequest description]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    
+    handleRequest(data) {
 
         let promise = new Promise((resolve) => {
             let allBoards = _.map(data, e => e);
@@ -80,31 +109,38 @@ class App {
         });
 
         promise
-            .then((allBoards) => this.Game.initialize(allBoards))
-            .catch((doh) => console.log(doh))
-            .then(() => this.Header.initialize())
-            .catch((doh) => console.log(doh))
-            .then(() => this.Footer.initialize())
-            .catch((doh) => console.log(doh))
-            .then(() => this.events.emit('loaded'));
+            .then((allBoards) => 
+                this.Game.initialize(allBoards))
+            .catch((doh)  => 
+                $logger(doh))
+            .then(()      => 
+                this.Header.initialize())
+            .catch((doh)  => 
+                $logger(doh))
+            .then(()      => 
+                this.Footer.initialize())
+            .catch((doh)  => 
+                $logger(doh))
+            .then(()      => 
+                this.events.emit('loaded'));
     }
-
-    //     return Promise.all([this.Game, this.Footer, this.Header])
-    //         .then(()     => {  this.Header.initialize();  })
-    //         .catch((doh) => {  console.log(doh);        })
-    //         .then(()     => {  this.Game.initialize();  })
-    //         .catch((doh) => {  console.log(doh);        })
-    //         .then(()     => {  this.Footer.initialize();    })
-    //         .catch((doh) => {  console.log(doh);        })
-    //         .then(()     => {  console.log('loaded');   });
-    // }
 }
 
-/*load Uberdoku when ready*/
-$(document).ready(function() {
-    return new App();
-});
+/*load App when ready*/
+(( $, _ ) => {
 
+    $(document).ready(function() {
+        new App();
+    });
 
+})( $, _ );
 
-export default App;
+ /**
+  * Global logger that logs app error messages 
+  * @param  {string} message [description]
+  * @param  {array} args 
+  */
+ function $logger(message, ...args) {
+     console.error.apply(console, [message].concat(args))
+     console.trace()
+ }

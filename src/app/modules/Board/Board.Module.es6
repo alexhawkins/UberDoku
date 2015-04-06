@@ -5,9 +5,9 @@ import helpers from "/../../utils/helpers.es6";
 import boardTpl from "./Board.Template";
 
 /************************************************************************
- * Class: Board                                                          *
- * File: Board.Module.es6                                                 *
- * =======================================================================
+ * Class: Board                                                         *
+ * File: Board.Module.es6                                               *
+ * ======================================================================
  * Description: the Board module is where all the magic of the game
  * happens. This is where the actual Game Board is created and various
  * calculation regarding the state of the game are made. It is our 
@@ -27,11 +27,11 @@ class Board {
 
     constructor(props, options) {
         console.log(props);
-        
+
         let answer = {
-                isValid: null,
-                value: null,
-                location: [null, null]
+            isValid: null,
+            value: null,
+            location: [null, null]
         };
         /* PROPERTIES */
         this.props = props;
@@ -39,9 +39,9 @@ class Board {
 
         /* MODULE OPTIONS */
         this.opt = options;
-        this.opt.el = "#board";
+        this.opt.el = '#board';
         this.opt.template = boardTpl;
-        this.opt.output = "";
+        this.opt.output = '';
 
         var _board = _.first(this.props.stores.board);
 
@@ -64,7 +64,7 @@ class Board {
 
     initialize() {
         console.log('board init');
-        
+
         //this._setListeners();
         this.createRows();
         return this.render();
@@ -81,7 +81,7 @@ class Board {
 
     createRows() {
         console.log('rows');
-        
+
         let board = [];
         board = this.getB();
         board.forEach((row, rowId) =>
@@ -89,7 +89,7 @@ class Board {
     }
 
     createRow(row, rowId) {
-        
+
         this.opt.output += `<div class="board-container">`;
 
         row.forEach((col, colId) => {
@@ -101,23 +101,44 @@ class Board {
     }
 
     createCell(rowId, colId, value) {
-        
+
         let section = '';
         let diff = this.props.difficulty;
         let read = this.opt.readonly;
-        if (diff >= 50) diff = diff - 30;
+        if (diff >= 50) {
+            diff = diff - 30;
+        }
         read = (Math.floor(Math.random() * 100) - 20 > diff) ? true : false;
-        if ((rowId < 3 || rowId > 5) && (colId < 3 || colId > 5))
-            section = "new-section";
-        else if ((rowId > 2 && rowId < 6) && (colId > 2 && colId < 6))
-            section = "new-section";
-        value = read ? (' value=' + value + ' readonly=true  class="board only-nums ' + section + '"') : ' class="board guess only-nums ' + section + '"';
-        return '<input type="text" id="' + rowId + ',' + colId + '"' + value + ' maxlength="1"/>';
+
+        if    ( ( rowId < 3 || rowId > 5 )  && 
+                ( colId < 3 || colId > 5 ) ) 
+        {
+                section = 'new-section';
+        } 
+        else if ( ( rowId > 2 && rowId < 6 )  && 
+                ( colId > 2 && colId < 6 ) )
+        {
+                section = 'new-section';
+        }
+        if (read) {
+            value = ' value=' +
+                    value + ' ' +
+                    'readonly=true  class="board only-nums ' +
+                    section + '"';
+        } else {
+            value = ' class="board guess only-nums ' +
+                    section + '"';
+        }
+        return '<input type="text" id="' + 
+                    rowId + ',' +
+                    colId + '"' + 
+                    value + ' ' +
+                    'maxlength="1"/>';
 
     }
 
     validation(vkeys, userInput) {
-        
+
         let board, correctAnwser;
 
         board = this.getB();
@@ -126,12 +147,12 @@ class Board {
     }
 
     answerTracker(userInput, isValid) {
-        
+
         return this.props.answers.set(userInput, isValid);
     }
 
     checkAnswers() {
-        
+
         let clear = this.props.clear;
         let toggle = this.props.toggle;
 
@@ -158,12 +179,12 @@ class Board {
     }
 
     _clearAnswers(identifier) {
-        
+
         return this.props.answers.delete(identifier);
     }
 
     _evaluateInput(e) {
-        
+
         let identifier = e.target.id;
         if (isNaN(document.getElementById(identifier).value))
             document.getElementById(identifier).value = '';
@@ -176,7 +197,7 @@ class Board {
     }
 
     _setListeners() {
-        
+
         let board = document.getElementById('board');
         if (typeof board.addEventListener !== 'undefined') {
             board.addEventListener('keyup', (e) => {
@@ -186,7 +207,7 @@ class Board {
     }
 
     render() {
-        
+
         console.log('el', this.opt.el);
         console.log('out', this.opt.output);
         return $(this.opt.el).html(this.opt.output);

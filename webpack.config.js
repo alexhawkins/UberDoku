@@ -2,6 +2,7 @@ var webpack = require('webpack');
 var path = require("path");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var node_modules = path.join(__dirname, 'node_modules');
+var lowdash = path.join(__dirname + '/src/app/utils/lodash.min.js');
 
 var config = {
 
@@ -53,6 +54,11 @@ var config = {
 
     module: {
         noParse: [],
+        preLoaders: [{
+            test: /\.(es6|js)$/, // include .js files
+            exclude: [/node_modules/, /lowdash/], // exclude any and all files in the node_modules folder
+            loader: "jshint-loader"
+        }],
         loaders: [{
                 test: /\.js$/,
                 loader: 'babel-loader',
@@ -79,7 +85,10 @@ var config = {
                 test: /\.(png|jpg|gif|woff|eot|ttf|svg)$/,
                 loader: 'file-loader?name=assets/[hash].[ext]',
                 exclude: /node_modules/
-            }
+            }, {
+                test: /fonts\/.+\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                loader: "raw-loader"
+            },
         ]
     },
     resolve: {
