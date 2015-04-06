@@ -3,34 +3,32 @@ import headerView from "./header.view";
 
 class Header {
 
-    constructor( events, props, difficulty, userAnswers, onUserAdjust ) {
-        console.log(arguments);
-        this.props = props;
+    constructor(events, difficulty, props) {
+        let getProps = props.get('props');
+        props.set('props');
         this.el = '#header';
         this.template = headerView;
         this.events = events;
         this.difficulty = difficulty;
-        this.onUserAdjust = onUserAdjust;
-
+        console.log(getProps.name);
     }
 
-    activate() {
-
+    initialize() {
         this.render();
         this._setListeners();
     }
 
     _setListeners() {
-        
+
         $('#difficulty').mouseup(() => {
+            console.log('up');
             let level = $("#difficulty").val();
-            if (level !== this.difficulty)
+            if(level !== this.difficulty)
                 this.events.emit('adjustDifficulty', level);
         });
     }
 
     render() {
-        console.log('hello');
         return $(this.el).html(this.template);
     }
 

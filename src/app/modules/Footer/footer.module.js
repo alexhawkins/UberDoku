@@ -2,24 +2,23 @@ import "./footer.style";
 import footerView from "./footer.view.html";
 
 class Footer {
- 
-    constructor( events, props, difficulty, userAnswers, onUserButtonClick ) {
-        console.log(arguments);
+
+    constructor(events, difficulty) {
         this.difficulty = difficulty;
-        this.el = '#footer';
+        this.el = $('#footer');
         this.template = footerView;
         this.events = events;
-        this.checkToggle = false;
 
+        this.checkToggle = false;
     }
 
-    activate() {
-        this.setListeners();
+    initialize() {
         this.render();
+        this.setListeners();
     }
 
     setListeners() {
-       
+
         $('#check').click(() => {
             this.events.emit('checkAnswers', this.checkToggle);
             this.events.emit('touchedBoard');
@@ -34,7 +33,6 @@ class Footer {
     }
 
     render() {
-
         return $(this.el).html(this.template);
     }
 

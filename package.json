@@ -2,7 +2,7 @@
   "name": "UberDoku",
   "version": "1.0.0",
   "description": "A Sedoku Board Game in the style of Uber",
-  "main": "UberDoku.js",
+  "main": "app.module.es6",
   "scripts": {
     "build": "./node_modules/.bin/webpack -d",
     "watch": "./node_modules/.bin/webpack -d --watch",

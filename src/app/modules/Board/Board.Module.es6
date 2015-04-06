@@ -27,28 +27,28 @@ class Board {
 
     constructor(props, options) {
         console.log(props);
-        const vm = this;
+        
         let answer = {
                 isValid: null,
                 value: null,
                 location: [null, null]
         };
         /* PROPERTIES */
-        vm.props = props;
-        vm.props.answers = vm.props.stores.answers;
+        this.props = props;
+        this.props.answers = this.props.stores.answers;
 
         /* MODULE OPTIONS */
-        vm.opt = options;
-        vm.opt.el = "#board";
-        vm.opt.template = boardTpl;
-        vm.opt.output = "";
+        this.opt = options;
+        this.opt.el = "#board";
+        this.opt.template = boardTpl;
+        this.opt.output = "";
 
-        var _board = _.first(vm.props.stores.board);
+        var _board = _.first(this.props.stores.board);
 
         /**********************************************************
          * Getters and Setters for private variables
          **********************************************************/
-        vm.getB = () => _board;
+        this.getB = () => _board;
 
     }
 
@@ -64,10 +64,10 @@ class Board {
 
     initialize() {
         console.log('board init');
-        const vm = this;
-        //vm._setListeners();
-        vm.createRows();
-        return vm.render();
+        
+        //this._setListeners();
+        this.createRows();
+        return this.render();
     }
 
     /*********************************************************************
@@ -81,30 +81,30 @@ class Board {
 
     createRows() {
         console.log('rows');
-        const vm = this;
+        
         let board = [];
-        board = vm.getB();
+        board = this.getB();
         board.forEach((row, rowId) =>
-            vm.createRow(row, rowId));
+            this.createRow(row, rowId));
     }
 
     createRow(row, rowId) {
-        const vm = this;
-        vm.opt.output += `<div class="board-container">`;
+        
+        this.opt.output += `<div class="board-container">`;
 
         row.forEach((col, colId) => {
-            vm.opt.output += vm.createCell(rowId, colId, col);
+            this.opt.output += this.createCell(rowId, colId, col);
         });
 
-        vm.opt.output += '</div>';
-        return vm.opt.output;
+        this.opt.output += '</div>';
+        return this.opt.output;
     }
 
     createCell(rowId, colId, value) {
-        const vm = this;
+        
         let section = '';
-        let diff = vm.props.difficulty;
-        let read = vm.opt.readonly;
+        let diff = this.props.difficulty;
+        let read = this.opt.readonly;
         if (diff >= 50) diff = diff - 30;
         read = (Math.floor(Math.random() * 100) - 20 > diff) ? true : false;
         if ((rowId < 3 || rowId > 5) && (colId < 3 || colId > 5))
@@ -117,31 +117,31 @@ class Board {
     }
 
     validation(vkeys, userInput) {
-        const vm = this;
+        
         let board, correctAnwser;
 
-        board = vm.getB();
+        board = this.getB();
         correctAnwser = board[vkeys[0]][vkeys[1]];
         return (correctAnwser === userInput) ? true : false;
     }
 
     answerTracker(userInput, isValid) {
-        const vm = this;
-        return vm.props.answers.set(userInput, isValid);
+        
+        return this.props.answers.set(userInput, isValid);
     }
 
     checkAnswers() {
-        const vm = this;
-        let clear = vm.props.clear;
-        let toggle = vm.props.toggle;
+        
+        let clear = this.props.clear;
+        let toggle = this.props.toggle;
 
         let color = this.opt.colors.uberBlack;
-        vm.userAnswers.forEach((key, value) => {
+        this.userAnswers.forEach((key, value) => {
             let identity = `${value}`;
             if (clear) {
-                vm._clearAnswers(identity);
-            } else if (!vm.props.toggle) {
-                color = key ? 'white' : vm.opt.colors.uberRed;
+                this._clearAnswers(identity);
+            } else if (!this.props.toggle) {
+                color = key ? 'white' : this.opt.colors.uberRed;
             }
             console.log(identity);
             helpers.colorizeOrClear(identity, color, clear, toggle);
@@ -158,38 +158,38 @@ class Board {
     }
 
     _clearAnswers(identifier) {
-        const vm = this;
-        return vm.props.answers.delete(identifier);
+        
+        return this.props.answers.delete(identifier);
     }
 
     _evaluateInput(e) {
-        const vm = this;
+        
         let identifier = e.target.id;
         if (isNaN(document.getElementById(identifier).value))
             document.getElementById(identifier).value = '';
         let userInput = e.target.value;
         let correctAnwser = identifier.split(',');
         let validationKeys = correctAnwser.map(e => parseInt(e, 10));
-        let isValid = vm.validation(validationKeys, parseInt(userInput, 10));
+        let isValid = this.validation(validationKeys, parseInt(userInput, 10));
         if (userInput !== '' && !document.getElementById(identifier).readOnly)
-            vm.answerTracker(identifier, isValid);
+            this.answerTracker(identifier, isValid);
     }
 
     _setListeners() {
-        const vm = this;
+        
         let board = document.getElementById('board');
         if (typeof board.addEventListener !== 'undefined') {
             board.addEventListener('keyup', (e) => {
-                vm._evaluateInput(e);
+                this._evaluateInput(e);
             }, false);
         }
     }
 
     render() {
-        const vm = this;
-        console.log('el', vm.opt.el);
-        console.log('out', vm.opt.output);
-        return $(vm.opt.el).html(vm.opt.output);
+        
+        console.log('el', this.opt.el);
+        console.log('out', this.opt.output);
+        return $(this.opt.el).html(this.opt.output);
     }
 
 }

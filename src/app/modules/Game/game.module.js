@@ -1,123 +1,97 @@
-"use strict";
 import "../../assets/stylesheets/base";
 /* {  utils  } */
 import {
     Promise
 }
 from 'es6-promise';
-//import { defaultProps } from "../../utils/defaultProps.es6";
+
 import Board from "../board/board.module";
-import Footer from "../footer/footer.module";
-import Header from "../header/header.module";
-//import dataservice from "../../utils/DataService";
-//import defaultProps from "../../utils/defaultProps";
+import dataservice from "../../utils/DataService";
 /**********************************************************
  * Game Class
  ***********************************************************/
 
 class Game {
-    constructor(props, events) {
+    constructor(events, difficulty) {
 
-        let _props = props;
-        let _state = {
-            userAsnswers: [],
-            difficulty: 50
-        };
-
-        this.virtualDOM = {};
 
         this.events = events;
+        this.score = 0;
+        this.time = 0;
+        this.difficulty = difficulty;
 
         /**********************************************************
+         * Private Variables
+         **********************************************************/
+
+        let _allBoards = new Map();
+        let _solution = new Map();
+        let _gameBoard = new Map();
+        /**********************************************************
          * Getters and Setters for private variables
-        /**********************************************************/
-        this.getState = () => _state;
-        this.getProps = () => _props;
+         **********************************************************/
 
-        this.setState = (state) => _.assign(_state, state);
-        this.setProps = (props) => _.assign(_props, props);
-
-        this.activate();
+        this.setAllBoards = (l) => _allBoards.set('all', l);
+        this.getAllBoards = () => _allBoards;
+        this.setSolution = (o) => _solution.set('solution', o);
+        this.getSolution = () => _solution;
+        this.setGameBoard = (l) => _gameBoard.set('solution', l);
+        this.getGameBoard = () => _gameBoard;
     }
 
-    activate() {
+    initialize(data) {
+        this.difficulty = 50;
+        this.setBoardData(data);
         this._setListeners();
-        this.instantiate();
-        this.render();
     }
 
-    handleChange(id, userAnswers, difficulty) {
-        this.setState({
-            userAnswers: userAnswers,
-            difficulty: difficulty
-        });
-        this.events.emit(id);
+    requestGameData() {
+        return dataservice.getGames(this.setBoardData.bind(this));
     }
 
-    // newGame() {
-    //     const this = this;
-    //     let all = this.getAllBoards().get('all');
-    //     return all.length > 0 ? this.setBoardData(all) : this.requestGameData();
-    // }
-
-    instantiate() {
-        let events = this.events;
-        let props = this.getProps();
-        let difficulty = this.getState().difficulty;
-        let userAnswers = this.getState().userAnswers;
-        let onUserAdjust = this.handleChange;
-        let onUserButtonClick = this.handleChange;
-
-        this.header = new Header(
-            events,
-            props,
-            difficulty,
-            userAnswers,
-            onUserAdjust
-        );
-
-        this.board = new Board(
-            events,
-            props,
-            difficulty,
-            userAnswers
-        );
-
-        this.footer = new Footer(
-            events,
-            props,
-            difficulty,
-            userAnswers,
-            onUserButtonClick
-        );
-    }
-
-    render() {
-
+    setBoardData(data) {
         let promise = new Promise((resolve) => {
-            resolve(true);
+            let allBoards = _.map(data, e => e);
+            this.setAllBoards(allBoards);
+            resolve(allBoards)
         });
 
-        return promise
-            .then(() => this.board.activate())
-            .catch((err) => $log(err))
-            .then(() => this.header.activate())
-            .catch((err) => $log(err))
-            .then(() => this.footer.activate())
-            .catch((err) => $log(err))
-            .then(() => this.events.emit('loaded'));
+        promise
+            .then((boards) => this.createSolutionBoard(boards))
+            .catch((doh) => console.log(doh))
+            .then((solution) => this.createGameBoard(solution))
+            .catch((doh) => console.log(doh))
+            .then((gameB) => this.setGameBoard(gameB))
+            .catch((doh) => console.log(doh));
     }
 
+    createSolutionBoard(all) {
+        let solution = all.shift();
+        this.setSolution(solution);
+        return this.getSolution();
+    }
+
+    createGameBoard(solution) {
+        let gameBoard = new Board(solution, this.events, this.difficulty); //create new instance of Board
+        //iniitalize game board
+        return gameBoard;
+    }
+
+    newGame() {
+        let all = this.getAllBoards().get('all');
+        return all.length > 0 ? this.setBoardData(all) : this.requestGameData();
+    }
 
     _setListeners() {
-        console.log('loaded');
+
         this.events.on('checkAnswers', (args) => {
-            let board = this.getProps().board;
-            board.checkAnswers(false, args);
+            this.getGameBoard()
+                .get('solution')
+                .checkAnswers(false, args);
         });
 
         this.events.on('clearBoard', () => {
-            let board = this.getProps().board;
+            let board = this.getGameBoard().get('solution');
             board.checkAnswers(true);
             board.userAnswers.clear;
         });
@@ -135,12 +109,11 @@ class Game {
         });
 
         this.events.on('adjustDifficulty', (args) => {
-            let board = this.getProps().board;
-            console.log(board);
+            let board = this.getGameBoard().get('solution')
             this.difficulty = args;
             board.difficulty = args;
             board.output = '';
-            this.board.createRows(args);
+            board.createRows(args);
             $('#board').html(board.output);
             board.checkAnswers(true);
             board.userAnswers.clear;
@@ -155,7 +128,7 @@ class Game {
                 this.newGame();
                 $('#board').animate({
                     opacity: 1
-                }, 500).promise();
+                }, 500).promise()
             });
         });
     }

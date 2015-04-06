@@ -23,7 +23,7 @@ var config = {
 
 
     entry: {
-        app: ["./src/app/UberDoku.Module.es6"],
+        app: ["./src/app/app.module.es6"],
         vendor: ['jquery', 'lodash', 'es6-promise']
     },
 
