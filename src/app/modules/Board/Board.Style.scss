@@ -15,7 +15,6 @@ input.board {
     @include font-size(21, 16);
     color: #A9E6F1;
     font-weight: 600;
-    border: none;
     outline: none;
     width: 10.777777777777779%;
     margin-right: 1px;
@@ -24,10 +23,10 @@ input.board {
     padding: 2.2% 1% 2.2% 1%;
     text-align: center;
     background-color: $uberBlack;
-    border: 3px solid #006679
-;
+    border: 3px solid #006679;
     border-radius: 100px;
 }
+
 
 h2.board {
     margin: 0;
@@ -62,8 +61,28 @@ p.board {
 
 .board.guess.only-nums {
     color: white;
+    background: $uberBlack;
     font-weight: 900;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
 }
+.board.guess.only-nums:hover {
+    border-color: lighten($uberBlue, 20%);
+    background: darken($uberBlue, 35%);
+}
+
+.board.guess.only-nums:focus {
+    color: $uberBlue;
+    border-color: white;
+}
+
+.wrong {
+    background: green;
+}
+
 .board.new-section {
     border-color: $uberBlue;
 }

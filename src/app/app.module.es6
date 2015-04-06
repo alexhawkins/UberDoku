@@ -1,6 +1,8 @@
+"use strict";
 /* {  assets  } */
 import "./assets/stylesheets/base";
 import dataservice from "./utils/DataService";
+import defaultProps from "./utils/defaultProps";
 /* {  utils  } */
 import {
     Promise
@@ -21,40 +23,60 @@ class App {
 
     constructor() {
 
-        this.name = 'Uberdoku';
-        this.difficulty = 50;
-        /**********************************************************
-         * instantiate components for Sedoku
-         **********************************************************/
-        this.STORE = new Map();
-        let props = {
-            name: 'John',
-            array:[0,2]
-        }
-        this.STORE.set('props', props);
+        let modules = {
+            Game,
+            Header,
+            Footer
+        };
 
-        this.Events = new EventSystem();
-        this.Header = new Header(this.Events, this.difficulty, this.STORE);
-        this.Game = new Game(this.Events, this.difficulty);
-        this.Footer = new Footer(this.Events, this.difficulty);
+        this.events = new EventSystem();
+        this.service = dataservice.getGames;
+
+        let _props = defaultProps;
+
 
         /* initialize components for Sedoku */
-        this.initialize();
+        this.initialize(modules, _props);
     }
 
-    initialize() {
-        return dataservice.getGames(this._loadGames.bind(this));
+    initialize(modules, props) {
+        let getMoreGames = this.getData;
+
+        this.Header = new modules.Header(
+            this.events,
+            props
+        );
+
+        this.Game = new modules.Game(
+            this.events,
+            props
+        );
+
+        this.Footer = new modules.Footer(
+            getMoreGames,
+            this.events,
+            props
+        );
+
+        return this.getData();
+        // this.Header = new Header(this.Events, this.difficulty, this.STORE);
+        // this.Game = new Game(this.Events, this.difficulty);
+        // this.Footer = new Footer(this.Events, this.difficulty);
+        
+    }
+
+    getData(){
+        return this.service(this._handleRequest.bind(this));
     }
 
 
-
-    _loadGames(games) {
+    _handleRequest(data) {
         /* Promise.all takes an array of promises and creates a 
            promise that fulfills when all modules successfully load. */
 
-        let promise = new Promise(function(resolve) {
-            let allBoards = _.map(games, e => e);
-            resolve(allBoards)
+        let promise = new Promise((resolve) => {
+            let allBoards = _.map(data, e => e);
+            resolve(allBoards);
         });
 
         promise
@@ -64,7 +86,7 @@ class App {
             .catch((doh) => console.log(doh))
             .then(() => this.Footer.initialize())
             .catch((doh) => console.log(doh))
-            .then(() => this.Events.emit('loaded'));
+            .then(() => this.events.emit('loaded'));
     }
 
     //     return Promise.all([this.Game, this.Footer, this.Header])
@@ -78,7 +100,7 @@ class App {
     // }
 }
 
-/*load Sedoku when ready*/
+/*load Uberdoku when ready*/
 $(document).ready(function() {
     return new App();
 });

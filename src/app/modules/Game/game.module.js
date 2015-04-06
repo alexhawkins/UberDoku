@@ -12,27 +12,24 @@ import dataservice from "../../utils/DataService";
  ***********************************************************/
 
 class Game {
-    constructor(events, difficulty) {
-
+    constructor(events, props) {
 
         this.events = events;
-        this.score = 0;
-        this.time = 0;
-        this.difficulty = difficulty;
+        this.difficulty = props.difficulty;
 
         /**********************************************************
          * Private Variables
          **********************************************************/
 
-        let _allBoards = new Map();
+        let _allGames = props.games;
         let _solution = new Map();
-        let _gameBoard = new Map();
+        let _gameBoard = props.board;
         /**********************************************************
          * Getters and Setters for private variables
          **********************************************************/
 
-        this.setAllBoards = (l) => _allBoards.set('all', l);
-        this.getAllBoards = () => _allBoards;
+        this.setAllGames = (l) => _allGames.set('all', l);
+        this.getAllGames = () => _allGames;
         this.setSolution = (o) => _solution.set('solution', o);
         this.getSolution = () => _solution;
         this.setGameBoard = (l) => _gameBoard.set('solution', l);
@@ -40,7 +37,6 @@ class Game {
     }
 
     initialize(data) {
-        this.difficulty = 50;
         this.setBoardData(data);
         this._setListeners();
     }
@@ -51,17 +47,17 @@ class Game {
 
     setBoardData(data) {
         let promise = new Promise((resolve) => {
-            let allBoards = _.map(data, e => e);
-            this.setAllBoards(allBoards);
-            resolve(allBoards)
+            let games = _.map(data, e => e);
+            this.setAllGames(games);
+            resolve(games);
         });
 
         promise
-            .then((boards) => this.createSolutionBoard(boards))
+            .then((games) => this.createSolutionBoard(games))
             .catch((doh) => console.log(doh))
-            .then((solution) => this.createGameBoard(solution))
+            .then((solution) => this.render(solution))
             .catch((doh) => console.log(doh))
-            .then((gameB) => this.setGameBoard(gameB))
+            .then((board) => this.setGameBoard(board))
             .catch((doh) => console.log(doh));
     }
 
@@ -71,15 +67,17 @@ class Game {
         return this.getSolution();
     }
 
-    createGameBoard(solution) {
-        let gameBoard = new Board(solution, this.events, this.difficulty); //create new instance of Board
-        //iniitalize game board
-        return gameBoard;
+    newGame() {
+        let all = this.getAllGames().get('all');
+        return all.length > 0 ? this.setBoardData(all) : this.requestGameData();
     }
 
-    newGame() {
-        let all = this.getAllBoards().get('all');
-        return all.length > 0 ? this.setBoardData(all) : this.requestGameData();
+    render(solution) {
+        return new Board(
+            solution,
+            this.events,
+            this.difficulty
+        );
     }
 
     _setListeners() {
@@ -109,7 +107,7 @@ class Game {
         });
 
         this.events.on('adjustDifficulty', (args) => {
-            let board = this.getGameBoard().get('solution')
+            let board = this.getGameBoard().get('solution');
             this.difficulty = args;
             board.difficulty = args;
             board.output = '';
@@ -128,7 +126,7 @@ class Game {
                 this.newGame();
                 $('#board').animate({
                     opacity: 1
-                }, 500).promise()
+                }, 500).promise();
             });
         });
     }

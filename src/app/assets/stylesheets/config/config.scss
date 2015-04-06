@@ -122,3 +122,11 @@
     -ms-user-select: none;
     user-select: none;
 }
+
+@mixin transition($color, $prop, $time) {
+   $prop: $color;
+    -webkit-transition: $prop $time;
+    -moz-transition: $prop $time;
+    -o-transition: $prop $time;
+    transition: $prop $time;
+}

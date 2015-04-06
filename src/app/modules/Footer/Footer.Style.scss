@@ -1,8 +1,7 @@
 @import "../../assets/stylesheets/config/colors";
 @import "../../assets/stylesheets/config/config";
 @import "../../assets/stylesheets/config/flexbox";
-
-#footer{
+#footer {
     opacity: 0;
 }
 
@@ -21,20 +20,19 @@
     @include line-height(16);
     @include stop-select;
     @include flexbox;
+    color: white;
     padding: 0;
     width: 15%;
     max-height: 50px;
     min-width: 100px;
     margin-top: 10px;
     margin-right: 10px;
-    color: white;
     font-weight: 200;
     text-align: center;
     min-height: 100%;
     display: flex;
     flex-direction: column;
     border: 2px solid $uberBlue;
-    background-color: $uberNavyBlack;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
@@ -42,6 +40,22 @@
     text-decoration: none;
 }
 
+#check, #new-game, #clear-board{
+    background: $uberBlack;
+    color: white;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+}
+
+#check:hover,  #new-game:hover, #clear-board:hover{
+    background: darken($uberBlue, 2%);
+}
+#check:active, #new-game:active, #clear-board:active {
+    background: darken($uberBlue, 30%);
+}
 
 .flex-item.footer:hover {
     @include stop-select;

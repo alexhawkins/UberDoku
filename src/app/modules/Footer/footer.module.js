@@ -3,9 +3,9 @@ import footerView from "./footer.view.html";
 
 class Footer {
 
-    constructor(events, difficulty) {
-        this.difficulty = difficulty;
-        this.el = $('#footer');
+    constructor(getMoreData, events, props) {
+        this.difficulty = props.difficulty;
+        this.el = '#footer';
         this.template = footerView;
         this.events = events;
 

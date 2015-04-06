@@ -1,7 +1,8 @@
 let defaultProps = {
-
-    games: [],
-    board: [],
+    userAnswers: new Map(),
+    difficulty: 50,
+    games: new Map(),
+    board: new Map(),
     cells: {
         rowId: null,
         colId: null,

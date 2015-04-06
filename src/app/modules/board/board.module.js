@@ -42,8 +42,9 @@ class Board {
 
     createRow(row, rowId) {
         this.output += '<div class="board-container">';
-        row.forEach((col, colId) =>{
-            this.output += this.createCell(rowId, colId, col)});
+        row.forEach((col, colId) => {
+            this.output += this.createCell(rowId, colId, col)
+        });
         this.output += '</div>'
         return this.output;
     }
@@ -52,11 +53,11 @@ class Board {
         let section = '';
         let difficulty = this.difficulty;
         if (difficulty >= 50) difficulty = difficulty - 30;
-        let readOnly = (Math.floor(Math.random() * 100) - 20 > difficulty ) ? true : false;
-        if((rowId < 3 || rowId > 5) && (colId < 3 || colId > 5)) section = "new-section";
-        else if((rowId > 2 && rowId < 6) && (colId > 2 && colId < 6)) section = "new-section";
+        let readOnly = (Math.floor(Math.random() * 100) - 20 > difficulty) ? true : false;
+        if ((rowId < 3 || rowId > 5) && (colId < 3 || colId > 5)) section = "new-section";
+        else if ((rowId > 2 && rowId < 6) && (colId > 2 && colId < 6)) section = "new-section";
         value = readOnly ? (' value=' + value + ' readonly=true  class="board only-nums ' + section + '"') : ' class="board guess only-nums ' + section + '"';
-        return '<input type="text" id="' + rowId + ',' + colId + '"' + value + ' maxlength="1"/>';
+        return '<input type="text" id="cell-' + rowId + '-' + colId + '"' + value + ' maxlength="1"/>';
 
     }
 
@@ -71,13 +72,26 @@ class Board {
     }
 
     checkAnswers(clear = false, toggle = false) {
-        let color = '#06060F'
+
         this.userAnswers.forEach((key, value) => {
-            let indentifier = `${value}`;
-            if (clear) this._clearAnswers(indentifier);
+            let el = document.getElementById(value);
+            let color = el.classList.contains("new-section") ? '#1FBAD6' : '#006679';
+            if (clear) this._clearAnswers(value);
+            /* if not attempting to clear the board or 
+            and not on keydown after checking answers, set new cell color */
             else if (!toggle) color = key ? 'white' : '#FF0000';
-            helpers.colorizeOrClear(indentifier, color, toggle, clear);
+            this._colorizeOrClear(el, color, toggle, clear);
         });
+    }
+
+
+    _colorizeOrClear(el, color, toggle, clear = false) {
+        el.style.borderColor = color;
+        el.style.weight = 'bold';
+        //element.style.color = color === 'white' ? '#070713' : 'white';
+        if (clear) {
+            el.value = '';
+        }
     }
 
     _clearAnswers(identifier) {
@@ -89,7 +103,7 @@ class Board {
         if (isNaN(document.getElementById(identifier).value))
             document.getElementById(identifier).value = '';
         let userInput = e.target.value;
-        let correctAnwser = identifier.split(',');
+        let correctAnwser = _.rest(identifier.split('-'));
         let validationKeys = correctAnwser.map(e => parseInt(e, 10));
         let isValid = this.validation(validationKeys, parseInt(userInput, 10));
         if (userInput !== '' && !document.getElementById(identifier).readOnly)

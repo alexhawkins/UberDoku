@@ -1,16 +1,14 @@
+'use strict';
 import "./header.style";
 import headerView from "./header.view";
 
 class Header {
 
-    constructor(events, difficulty, props) {
-        let getProps = props.get('props');
-        props.set('props');
+    constructor(events,  props) {
         this.el = '#header';
         this.template = headerView;
         this.events = events;
-        this.difficulty = difficulty;
-        console.log(getProps.name);
+        this.difficulty = props.difficulty;
     }
 
     initialize() {
@@ -18,7 +16,12 @@ class Header {
         this._setListeners();
     }
 
-    _setListeners() {
+   
+    render() {
+        return $(this.el).html(this.template);
+    }
+
+     _setListeners() {
 
         $('#difficulty').mouseup(() => {
             console.log('up');
@@ -28,10 +31,7 @@ class Header {
         });
     }
 
-    render() {
-        return $(this.el).html(this.template);
-    }
 
-};
+}
 
 export default Header;
