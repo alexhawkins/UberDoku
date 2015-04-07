@@ -21,11 +21,7 @@ var config = {
     devtool: 'eval',
     debug: true,
     cache: false,
-    longTermCaching: false,
-    separateStylesheet: false,
-    minimize:false,
     prerender: false,
-    hotComponents: false,
 
     entry: {
         app: ['./src/app/app.module.es6'],

@@ -1,7 +1,6 @@
 #Uberdoku
 
-A Sedoku board game that demonstrates a highly modular workflow using the latest from EcmaScript 6, Sass modules, and Webpack without the use of a modern framework. With a basic html skeleton wrapped in a highly responsive CSS Flexbox Layout, this project is highly customizable. It also comes with a very lightweight Eventing System for creating custom events. Feel free to use this as a template/starter kit for your own projects. The app structure is well suited to builds of both Angular and React.
-
+A Sedoku board game that demonstrates a highly modular workflow using the latest from EcmaScript 6, Sass modules, and Webpack without the use of a modern framework. With a basic html skeleton wrapped in a highly responsive CSS Flexbox Layout, this project is highly customizable. It also comes with a very lightweight Eventing System for creating custom events. 
 
 ## Structure
 ###Code Architecture
@@ -14,19 +13,19 @@ A Sedoku board game that demonstrates a highly modular workflow using the latest
 |   ├── ├── ├── header/
 |   ├── ├── ├── ├── header.module.es6
 |   ├── ├── ├── ├── header.style.scss
-|   ├── ├── ├── ├── header.templ.html
+|   ├── ├── ├── ├── header.tpl.html
 |   ├── ├── ├── game/
 |   ├── ├── ├── ├── game.module.es6
 |   ├── ├── ├── ├── game.style.scss
-|   ├── ├── ├── ├── game.templ.html
+|   ├── ├── ├── ├── game.tpl.html
 |   ├── ├── ├── board/
 |   ├── ├── ├── ├── board.module.es6
 |   ├── ├── ├── ├── board.style.scss
-|   ├── ├── ├── ├── board.templ.html
+|   ├── ├── ├── ├── board.tpl.html
 |   ├── ├── ├── footer/
 |   ├── ├── ├── ├── footer.module.es6
 |   ├── ├── ├── ├── footer.style.scss
-|   ├── ├── ├── ├── footer.templ.html
+|   ├── ├── ├── ├── footer.tpl.html
 |   ├── ├── ├── utils/
 |   ├── ├── ├── ├── EventSystem.es6
 |   ├── ├── ├── ├── DataService.es6
@@ -75,6 +74,7 @@ A Sedoku board game that demonstrates a highly modular workflow using the latest
 * Use of Promises with ES6 Polyfill 
 * Embedded resources like images or fonts
 * Lodash Functions
+* Easy Deployment to Firebase
   
 **Development**
   * Development server
@@ -135,10 +135,13 @@ $ npm run build
 # open this url in your browser
 http://localhost:8080/
 ```
-##### *Hot Module Loadings(fastest)*
+##### *Hot Module Loading(fastest)*
 
 ```bash
 $ npm run hotbox
+
+# open this url in your browser
+http://localhost:8080/
 ```
 
 #####*WebPack Config*

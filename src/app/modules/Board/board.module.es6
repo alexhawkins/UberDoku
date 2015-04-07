@@ -8,22 +8,22 @@ import './board.style';
  * ======================================================================
  * Description: the Board module is where all the magic of the game
  * happens. This is where the actual Game Board is created and various
- * calculation regarding the state of the game are made. It is our 
- * workhorse method. Eventually, we will want to break the Board Module 
+ * calculation regarding the state of the game are made. It is our
+ * workhorse method. Eventually, we will want to break the Board Module
  * into further sub components/modules.
  ************************************************************************/
 
 class Board {
 
     /**************************************************************************
-     * @class   { Board } 
+     * @class   { Board }
      * Board Class contrstructor function
-     * 
+     *
      * @param   { Array } board      [description]
      * @param   { Object} events     [description]
      * @param   { Integer }  difficulty [description]
      * @config  { Object } [ userAnswers ]  [description]
-     * 
+     *
      **************************************************************************/
 
     constructor(board, events, difficulty) {
@@ -36,25 +36,27 @@ class Board {
 
         let _board = board;
 
-         /** [description] */
+        /** [description] */
         this.getBoard = () => _board.get('solution');
         this.initialize();
     }
+
     /**************************************************************************
      * [initialize description]
      * @return {[type]} [description]
-     *************************************************************************/ 
+     *************************************************************************/
 
     initialize() {
         this._setListeners();
         this.createRows();
         return this.render();
     }
+
     /**************************************************************************
      * [createRows description]
      * @return {[type]} [description]
      *************************************************************************/
-    
+
     createRows() {
         let board = this.getBoard();
         board.forEach((row, rowId) => this.createRow(row, rowId));
@@ -88,31 +90,31 @@ class Board {
         let section = '';
         let difficulty = this.difficulty;
 
-        if  (difficulty >= 50) { 
+        if (difficulty >= 50) {
             difficulty = difficulty - 30;
         }
         let throttle = (Math.floor(Math.random() * 100) - 20);
         let readOnly = (throttle > difficulty) ? true : false;
 
-        if  ((rowId < 3 || rowId > 5) && (colId < 3 || colId > 5)){
+        if ((rowId < 3 || rowId > 5) && (colId < 3 || colId > 5)) {
             section = 'new-section';
-        } 
-            
-        else if ((rowId > 2 && rowId < 6) && (colId > 2 && colId < 6)) {
-                section = 'new-section';
         }
-        if(readOnly){
-            value = ' value=' + value + 
-                    ' readonly=true  class="board only-nums ' + 
-                    section + '"';
+
+        else if ((rowId > 2 && rowId < 6) && (colId > 2 && colId < 6)) {
+            section = 'new-section';
+        }
+        if (readOnly) {
+            value = ' value=' + value +
+            ' readonly=true  class="board only-nums ' +
+            section + '"';
         } else {
             value = ' class="board guess only-nums ' + section + '"';
-        } 
-        return  '<input type="text" id="cell-' + 
-                    rowId + '-' +
-                    colId + '"' +
-                    value + ' ' + 
-                'maxlength="1"/>';
+        }
+        return '<input type="text" id="cell-' +
+            rowId + '-' +
+            colId + '"' +
+            value + ' ' +
+            'maxlength="1"/>';
 
     }
 
@@ -135,7 +137,7 @@ class Board {
      * @param  {Boolean} isValid   [description]
      * @return {[type]}            [description]
      **************************************************************************/
-    
+
     answerTracker(userInput, isValid) {
         return this.userAnswers.set(userInput, isValid);
     }
@@ -146,17 +148,17 @@ class Board {
      * @param  {Boolean} toggle [description]
      * @return {[type]}         [description]
      **************************************************************************/
-    
-    checkAnswers(clear=false, toggle=false) {
+
+    checkAnswers(clear = false, toggle = false) {
 
         this.userAnswers.forEach((key, value) => {
             let el = document.getElementById(value);
             let color = 'white';
-            if (clear) { 
+            if (clear) {
                 this._clearAnswers(value);
             }
             /* if not attempting to clear the board or 
-            and not on keydown after checking answers, set new cell color */
+             and not on keydown after checking answers, set new cell color */
             else if (!toggle) {
                 color = key ? '#00E031' : '#FF1800';
             }
@@ -174,7 +176,7 @@ class Board {
      * @param  {Boolean} clear  [description]
      * @return {[type]}         [description]
      **************************************************************************/
-    
+
     _colorizeOrClear(el, color, toggle, clear = false) {
         if (clear) {
             el.style.color = 'transparent';
@@ -182,7 +184,7 @@ class Board {
             setTimeout(() => {
                 el.value = '';
                 el.style.color = '#A9E6F1';
-            }, 200);       
+            }, 200);
         } else {
             el.style.color = color;
             el.style.weight = 900;
@@ -196,7 +198,7 @@ class Board {
      * @param  {[type]} identifier [description]
      * @return {[type]}            [description]
      **************************************************************************/
-    
+
     _clearAnswers(identifier) {
         return this.userAnswers.delete(identifier);
     }
@@ -206,15 +208,15 @@ class Board {
      * @param  {[type]} e [description]
      * @return {[type]}   [description]
      **************************************************************************/
-    
+
     _evaluateInput(e) {
 
         let identifier = e.target.id;
 
         if (isNaN(document.getElementById(identifier)
-            .value)){
+                .value)) {
             document.getElementById(identifier)
-            .value = '';
+                .value = '';
         }
 
         let userInput = e.target.value;
@@ -223,16 +225,16 @@ class Board {
             identifier.split('-'));
 
         let validationKeys = correctAnwser.map(
-            e => parseInt(e, 10));
+                e => parseInt(e, 10));
 
         let isValid = this.validation(
-            validationKeys, 
+            validationKeys,
             parseInt(userInput,
-            10
-        ));
+                10
+            ));
 
         if (userInput !== '' && !document.getElementById(identifier)
-            .readOnly){
+                .readOnly) {
             this.answerTracker(identifier, isValid);
         }
     }

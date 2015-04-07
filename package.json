@@ -9,7 +9,7 @@
         "server": "./node_modules/.bin/webpack-dev-server -d --inline --colors --display-error-details --content-base public",
         "hot": "NODE_ENV=hot-dev webpack -d",
         "start": "npm install && npm run build && npm run server",
-        "quick": "npm install && npm run hot && npm run server ",
+        "hotbox": "npm install && npm run hot && npm run server ",
         "test": "echo \"Error: no test specified\" && exit 1",
         "deploy": "NODE_ENV=production webpack -p"
     },

@@ -1,0 +1,9 @@
+{
+  "firebase": "uber-doku",
+  "public": "dist",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}
