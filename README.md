@@ -2,6 +2,43 @@
 
 A Sedoku board game that demonstrates a highly modular workflow using the latest from EcmaScript 6, Sass modules, and Webpack without the use of a modern framework. With a basic html skeleton wrapped in a highly responsive CSS Flexbox Layout, this project is highly customizable. It also comes with a very lightweight Eventing System for creating custom events. 
 
+
+###*Live Demo*
+**[Visit Uberdoku online!](https://uber-doku.firebaseapp.com/)**
+
+## Features
+
+* Compilation with Webpack
+* Write Next Generation JavaScript with Babel compiler
+* Modular Stylesheets with SASS, CSS or mixed
+* Responsive FlexBox layout
+* Modular Code Architecture for hot swapping components, making it easy to update and add to the existing codebase
+* Liberal Use of Promises with ES6 Polyfill
+* Embedded resources like images or fonts
+* Lodash Functions
+* Easy Deployment to Firebase (see steps below)
+  
+**Development**
+  * Development server
+  * Optional Hot Module Replacement dev server (LiveReload for Stylesheets)
+
+**Stylesheets** 
+  * Modular Sass, organized stylesheets that allow you to create styles 
+  with your components.
+  * Custom Mixins for FlexBox and other common styles(see config.scss)
+  * Uses SourceUrl for performance, but can switch to SourceMaps
+  * Css autoprefixer for vendor prefixes
+  
+**Eventing System**
+  * Comes with customizable lightweight eventing system - on, off, and emit functionality.
+  * Create custom events and functions with easy.
+  
+**Production**
+  * Generate separate css file to avoid FOUC
+  * Uglified, Minified, and Mangled CSS and javascript
+  * Easy Deploy to Firebase
+
+
 ## Structure
 ###Code Architecture
 
@@ -63,38 +100,6 @@ A Sedoku board game that demonstrates a highly modular workflow using the latest
 ├── README.md
 
 ``` 
-
-## Features
-
-* Compilation with webpack
-* Write Next Gen JavaScript with Babel compiler
-* Stylesheets with CSS, SASS or mixed
-* Responsive FlexBox layout
-* Modular Architecture to build upon
-* Use of Promises with ES6 Polyfill 
-* Embedded resources like images or fonts
-* Lodash Functions
-* Easy Deployment to Firebase
-  
-**Development**
-  * Development server
-  * Optional Hot Module Replacement dev server (LiveReload for Stylesheets
-
-**Stylesheets** 
-  * Modular Sass, organized stylesheets that allow you to create styles 
-  next to your components
-  * Custom Mixins for FlexBox
-  * Uses SourceUrl for performance, but can switch to SourceMaps
-  * Css autoprefixer for vendor prefixes
-  
-**Eventing System**
-  * Comes with customizable lightweight eventing system - on, off, and emit functionality.
-  * Create custom events and functions with ease.
-  
-**Production**
-  * Long Term Caching through file hashes enabled
-  * Generate separate css file to avoid FOUC
-  * Uglified, Minified, and Mangled CSS and javascript
 
 ## Requirements
 
@@ -159,6 +164,22 @@ Build the client bundle to your ```dist``` folder
 ``` bash
 npm run deploy
 ```
+Copy the `index.html` file from the public folder into the `dist` folder, particularly if you plan to deploy to firebase.
+
+
+### Deploy to Firebase
+
+* Copy the `index.html` file from the public folder into the `dist` folder 
+
+* Sign up with Firebase and create an App
+
+* `npm install -g firebase-tools` or `sudo npm install -g firebase-tools`
+
+* `cd` into your website directory and run `firebase init`
+
+* When asked for your app directory, type `dist`
+
+* Then deploy your website with `firebase deploy`. It's that simple
 
 
 ### **Testing**
