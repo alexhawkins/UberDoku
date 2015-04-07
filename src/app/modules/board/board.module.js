@@ -147,7 +147,7 @@ class Board {
      * @return {[type]}         [description]
      **************************************************************************/
     
-    checkAnswers(clear = false, toggle = false) {
+    checkAnswers(clear=false, toggle=false) {
 
         this.userAnswers.forEach((key, value) => {
             let el = document.getElementById(value);
@@ -160,7 +160,9 @@ class Board {
             else if (!toggle) {
                 color = key ? '#00E031' : '#FF1800';
             }
-            this._colorizeOrClear(el, color, toggle, clear);
+
+            return this._colorizeOrClear(el, color, toggle, clear);
+
         });
     }
 
@@ -174,11 +176,19 @@ class Board {
      **************************************************************************/
     
     _colorizeOrClear(el, color, toggle, clear = false) {
-        el.style.color = color;
-        el.style.weight = 900;
         if (clear) {
-            el.value = '';
+            el.style.color = 'transparent';
+
+            setTimeout(() => {
+                el.value = '';
+                el.style.color = '#A9E6F1';
+            }, 200);       
+        } else {
+            el.style.color = color;
+            el.style.weight = 900;
         }
+
+        return false;
     }
 
     /**************************************************************************

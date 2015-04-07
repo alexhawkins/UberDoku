@@ -158,6 +158,7 @@ class Game {
                 .checkAnswers(false, args);
         });
 
+    
         /**
          * [description]
          * @param  {[type]} 'clearBoard' [description]
