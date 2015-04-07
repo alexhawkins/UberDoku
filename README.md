@@ -9,7 +9,7 @@ A Sedoku board game that demonstrates a highly modular workflow using the latest
 ```
 ├── src/
 │   ├── app/
-|   ├── ├── app.module.js
+|   ├── ├── app.module.es6
 |   ├── ├── modules/
 |   ├── ├── ├── header/
 |   ├── ├── ├── ├── header.module.es6
@@ -112,7 +112,6 @@ Install [node.js](https://nodejs.org) or [io.js](https://iojs.org)
 Runs locally, no database required.
 
 ### Dev Builds
-The dev build does not optimize the deployed code.
 
 #####*Build and Serve*
 
@@ -135,6 +134,11 @@ $ npm run build
 
 # open this url in your browser
 http://localhost:8080/
+```
+##### *Hot Module Loadings(fastest)*
+
+```bash
+$ npm run hotbox
 ```
 
 #####*WebPack Config*
@@ -171,9 +175,9 @@ There is an issue with `node-sass` and `sass-loader`. Please do not install the 
     "node-sass": "sass/node-sass#v3.0.0-alpha.1",
     "sass-loader": "^0.4.2"
     ```
- in your `packages.json`
+ in your `package.json`
   
-If you're app starts to fail, `ctrl-c` and `npm rebuild`
+If your app starts to fail, `ctrl-c` and `npm rebuild`
 
 ```
 lsof -i TCP|fgrep LISTEN

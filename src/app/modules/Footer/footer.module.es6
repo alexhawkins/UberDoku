@@ -1,6 +1,6 @@
 'use strict';
 import './footer.style';
-import footerView from './footer.view.html';
+import footerView from './footer.tpl.html';
 
 /**************************************************************************
 /** @fileOverview a container for the main controls of the game. 

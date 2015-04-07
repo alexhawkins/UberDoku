@@ -21,7 +21,7 @@ let dataservice = {
      *********************************************************************/
     getGames: (callback) => {
         $.ajax({
-            url: 'api/data/games.json',
+            url: 'stores/data/games.json',
             type: 'GET',
             crossDomain: true,
             dataType: 'json',

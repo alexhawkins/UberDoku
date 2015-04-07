@@ -1,6 +1,6 @@
 'use strict';
 import './header.style';
-import headerView from './header.view';
+import headerView from './header.tpl';
 
 class Header {
 

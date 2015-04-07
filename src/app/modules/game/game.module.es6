@@ -1,9 +1,9 @@
 'use strict';
 import '../../assets/stylesheets/base';
-import { Promise } from 'es6-promise';
+import { Promise }  from 'es6-promise';
 
-import Board from '../board/board.module';
-import dataservice from '../../utils/DataService';
+import Board        from '../board/board.module';
+import dataservice  from '../../utils/DataService';
 
 
 /**

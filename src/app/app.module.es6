@@ -1,17 +1,14 @@
 'use strict';
 import './assets/stylesheets/base';
-import dataservice from './utils/DataService';
-import defaultProps from './utils/defaultProps';
+import dataservice   from './utils/DataService';
+import defaultProps  from './utils/defaultProps';
 
-import {
-    Promise
-}
-from 'es6-promise';
+import {  Promise  } from 'es6-promise';
 
-import Game from './modules/game/game.module';
-import Footer from './modules/footer/footer.module';
-import Header from './modules/header/header.module';
-import EventSystem from './utils/EventSystem';
+import Game          from './modules/game/game.module';
+import Footer        from './modules/footer/footer.module';
+import Header        from './modules/header/header.module';
+import EventSystem   from './utils/EventSystem';
 
 /**************************************************************************
  * @class  App 
@@ -141,6 +138,6 @@ class App {
   * @param  {array} args 
   */
  function $logger(message, ...args) {
-     console.error.apply(console, [message].concat(args))
-     console.trace()
+     console.error.apply(console, [message].concat(args));
+     console.trace();
  }
