@@ -11,6 +11,9 @@ coverage
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
+# Directory-based project format
+.idea/
+
 # Users Environment Variables
 .lock-wscript
 
