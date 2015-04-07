@@ -103,12 +103,9 @@ Install [node.js](https://nodejs.org) or [io.js](https://iojs.org)
 * on OSX install [home brew](http://brew.sh/) and type `brew install node`
 * on Windows install [chocolatey](https://chocolatey.org/) and type `choco install nodejs`
 
-##
-* Open terminal
-* Clone this repo and change the `origin` git remote.
-
-## Installing Node.js Packages
+#### *Installing Node.js Packages*
 - Open terminal
+-Clone this repo and change the `origin` git remote.
 - Type `npm install`
 
 ## Running
@@ -117,7 +114,7 @@ Runs locally, no database required.
 ### Dev Builds
 The dev build does not optimize the deployed code.
 
-#####Build and Serve
+#####*Build and Serve*
 
 ```bash
 $ npm start  
@@ -126,12 +123,12 @@ $ npm start
 # open this url in your browser
 http://localhost:8080/
 ```
-##### Auto Build Files
+##### *Auto Build Files*
 
 ```bash
 $ npm run watch
 ```
-##### Single Build Files
+##### *Single Build Files*
 
 ```bash
 $ npm run build
@@ -140,7 +137,7 @@ $ npm run build
 http://localhost:8080/
 ```
 
-#####WebPack Config
+#####*WebPack Config*
 
 The configuration is `webpack.config.js`.
 
