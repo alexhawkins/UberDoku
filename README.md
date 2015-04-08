@@ -66,23 +66,23 @@ A Sedoku board game that demonstrates a highly modular workflow using the latest
 |   ├── ├── ├── ├── footer.module.es6
 |   ├── ├── ├── ├── footer.style.scss
 |   ├── ├── ├── ├── footer.tpl.html
-|   ├── ├── ├── utils/
-|   ├── ├── ├── ├── EventSystem.es6
-|   ├── ├── ├── ├── DataService.es6
-|   ├── ├── ├── ├── defaultProps.es6
-|   ├── ├── ├── ├── lodash.min.js
-|   ├── ├── ├── stores/
-|   ├── ├── ├── ├── data/
-|   ├── ├── ├── ├── ├── games.json
+|   ├── ├── utils/
+|   ├── ├── ├── EventSystem.es6
+|   ├── ├── ├── DataService.es6
+|   ├── ├── ├── defaultProps.es6
+|   ├── ├── ├── lodash.min.js
 |   ├── ├── assets/
-|   ├── ├── ├── ├── stylesheets/
-|   ├── ├── ├── ├── ├── config/
-|   ├── ├── ├── ├── ├── ├── colors.scss
-|   ├── ├── ├── ├── ├── ├── config.scss
-|   ├── ├── ├── ├── ├── ├── flexbox.scss
-|   ├── ├── ├── ├── ├── utilities/
-|   ├── ├── ├── ├── ├── ├── normalize.scss
-|   ├── ├── ├── ├── ├── base.scss
+|   ├── ├── ├── stylesheets/
+|   ├── ├── ├── ├── config/
+|   ├── ├── ├── ├── ├── colors.scss
+|   ├── ├── ├── ├── ├── config.scss
+|   ├── ├── ├── ├── ├── flexbox.scss
+|   ├── ├── ├── ├── utilities/
+|   ├── ├── ├── ├── ├── normalize.scss
+|   ├── ├── ├── ├── base.scss
+├── ├── ├── stores/
+|   ├── ├── ├── data/
+|   ├── ├── ├── ├── games.json
 ├── public/
 │   ├── index.html
 |   ├── uberdoku.bundle.js
