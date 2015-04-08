@@ -221,4 +221,13 @@ If your app starts to fail, `ctrl-c` and `npm rebuild`
 ```
 lsof -i TCP|fgrep LISTEN
 kill -9 34608
-```    
+```
+
+### TODO LIST
+
+- Refactor code
+- Finish comments and testing
+- Add more cool functionality to game
+- Create an Uberdoku Class that extends core methods to all components. Similar to React.create
+- Integrate custom Virtual Dom with diffing algorithm. Similar to React.
+- Remove JQuery once Virtual Dom has been created.
