@@ -331,7 +331,7 @@ p.board {
   padding: 0;
   width: 15%;
   max-height: 50px;
-  min-width: 100px;
+  min-width: 70px;
   margin-top: 10px;
   margin-right: 10px;
   font-weight: 200;
@@ -438,30 +438,6 @@ header {
   padding: 0.5em 1.5em;
   color: white; }
 
-@media all and (max-width: 800px) {
-  .navigation {
-    -webkit-justify-content: space-around;
-        -ms-flex-pack: distribute;
-            justify-content: space-around; } }
-
-@media all and (max-width: 600px) {
-  .navigation {
-    -webkit-flex-flow: column wrap;
-    -ms-flex-flow: column wrap;
-        flex-flow: column wrap;
-    padding: 0;
-    margin: 0 0 5px 0; }
-  .navigation li {
-    margin: 0;
-    border: 0; }
-  .navigation div {
-    text-align: center;
-    padding: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
-  .navigation li:last-of-type div {
-    border-bottom: none; } }
-
 #difficulty {
   vertical-align: middle;
   margin-bottom: 9px; }
@@ -543,5 +519,29 @@ input[type=range]:focus::-ms-fill-lower {
 
 input[type=range]:focus::-ms-fill-upper {
   background: white; }
+
+@media all and (max-width: 800px) {
+  .navigation {
+    -webkit-justify-content: space-around;
+        -ms-flex-pack: distribute;
+            justify-content: space-around; } }
+
+@media all and (max-width: 600px) {
+  .navigation {
+    -webkit-flex-flow: column wrap;
+    -ms-flex-flow: column wrap;
+        flex-flow: column wrap;
+    padding: 0;
+    margin: 0 0 5px 0; }
+  .navigation li {
+    margin: 0;
+    border: 0; }
+  .navigation div {
+    text-align: center;
+    padding: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+  .navigation li:last-of-type div {
+    border-bottom: none; } }
 
 /*# sourceMappingURL=debugging/uberdoku.bundle.css.map*/

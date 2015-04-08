@@ -48,7 +48,7 @@ class Header {
          * [description]
          */
         
-        $('#difficulty').mouseup(() => {
+        $('[type=range]').change(() => {
             let level = $('#difficulty').val();
             if (level !== this.difficulty) {
                 this.events.emit('adjustDifficulty', level);

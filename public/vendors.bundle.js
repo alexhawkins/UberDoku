@@ -1864,9 +1864,9 @@
 	    value: true
 	});
 	/************************************************************************
-	* Uber Utils                                                           *
+	* DataService.es6                                                       *
 	*************************************************************************
-	* File: uberUtils.Module.es6
+	* File: DataService.Module.es6
 	* ***********************************************************************
 	* Description: where we store useful utility methods that can be used 
 	* repeatedly by n different parts of the app. 
@@ -2533,7 +2533,7 @@
 	             * [description]
 	             */
 	
-	            $('#difficulty').mouseup(function () {
+	            $('[type=range]').change(function () {
 	                var level = $('#difficulty').val();
 	                if (level !== _this.difficulty) {
 	                    _this.events.emit('adjustDifficulty', level);
@@ -2910,7 +2910,7 @@
   \************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = "<ul class=\"flex-container footer\">\n    <li id=\"clear-board\" class=\"flex-item footer\">clear</li>\n    <li id=\"check\" class=\"flex-item footer\">check</li>\n    <li id=\"new-game\" class=\"flex-item footer\">new game</li>\n</ul>\n"
+	module.exports = "<ul class=\"flex-container footer\">\n    <li id=\"clear-board\" class=\"flex-item footer\">clear</li>\n    <li id=\"check\" class=\"flex-item footer\">check</li>\n    <li id=\"new-game\" class=\"flex-item footer\">new</li>\n</ul>\n"
 
 /***/ },
 /* 23 */

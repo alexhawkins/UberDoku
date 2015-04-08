@@ -1,7 +1,7 @@
 /************************************************************************
-* Uber Utils                                                           *
+* DataService.es6                                                       *
 *************************************************************************
-* File: uberUtils.Module.es6
+* File: DataService.Module.es6
 * ***********************************************************************
 * Description: where we store useful utility methods that can be used 
 * repeatedly by n different parts of the app. 
