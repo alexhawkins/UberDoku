@@ -31,12 +31,15 @@ A Sedoku board game that demonstrates a highly modular workflow using the latest
   
 **Eventing System**
   * Comes with customizable lightweight eventing system - on, off, and emit functionality.
-  * Create custom events and functions with easy.
+  * Create custom events and functions with ease.
   
 **Production**
   * Generate separate css file to avoid FOUC
   * Uglified, Minified, and Mangled CSS and javascript
   * Easy Deploy to Firebase
+
+**Testing**
+  * Karma testing with Mocha and Chai and integrated with Webpack.
 
 
 ## Structure
@@ -92,9 +95,12 @@ A Sedoku board game that demonstrates a highly modular workflow using the latest
 |   ├── stores/
 |   ├── |── data/
 |   ├── ├── ├── games.json
+├── test/
+│   ├── app.module_test.es6
 ├── webpack.config.js
 ├── package.json
 ├── firebase.json
+├── karma.conf.js
 ├── .jshintrc
 ├── .gitignore
 ├── README.md
