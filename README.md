@@ -11,7 +11,7 @@ A Sedoku board game that demonstrates a highly modular workflow using the latest
 * Compilation with Webpack
 * Write Next Generation JavaScript with Babel compiler
 * Modular Stylesheets with SASS, CSS or mixed
-* Responsive FlexBox layout
+* Responsive FlexBox layout for both Desktop and Mobile devices
 * Modular Code Architecture for hot swapping components, making it easy to update and add to the existing codebase
 * Liberal Use of Promises with ES6 Polyfill
 * Embedded resources like images or fonts
