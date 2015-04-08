@@ -5,13 +5,7 @@ import './board.style';
 /************************************************************************
  * Class: Board                                                         *
  * File: Board.Module.es6                                               *
- * ======================================================================
- * Description: the Board module is where all the magic of the game
- * happens. This is where the actual Game Board is created and various
- * calculation regarding the state of the game are made. It is our
- * workhorse method. Eventually, we will want to break the Board Module
- * into further sub components/modules.
- ************************************************************************/
+ * =====================================================================*/
 
 class Board {
 
