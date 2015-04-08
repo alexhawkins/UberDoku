@@ -1666,6 +1666,10 @@
 	
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+	
 	__webpack_require__(/*! ./assets/stylesheets/base */ 12);
 	
 	var _dataservice = __webpack_require__(/*! ./utils/DataService */ 6);
@@ -1694,44 +1698,48 @@
 	
 	var _EventSystem2 = _interopRequireWildcard(_EventSystem);
 	
+	'use strict';
+	
 	/**************************************************************************
-	 * @class  App 
-	 * @module   { Object } Game The record set's id number.
-	 * @module   { Object } Footer      [description]
-	 * @module   { Object } Footer      [description]
-	 * @module   { Object } EvenSystem   [description]
-	 * @property { Array  } [games] [description]
-	 * @property { Board  } [board] [description]
-	 * @property { Object } [solution] [description]
+	 * @class               App 
+	 * @module   { Object } Game         - where state of the game is set
+	 * @module   { Object } Footer       - holds  game controls
+	 * @module   { Object } Header       - holds difficulty meter
+	 * @module   { Object } EventSystem  - keeps track of events
+	 * @property { Map    } [games]      - a map Ojbect of all sedoku games
+	 * @property { Array  } [board]      - holds the current game
+	 * @property { Number } [difficulty] - keeps track of game difficulty
+	 * @property { Array  } [solution]   - holds the current solution to the 
+	 *                                     game being played.
 	 **************************************************************************/
 	
 	var App = (function () {
 	
 	    /**************************************************************************
 	     * @constructor 
-	     * @param    { Object } props The record set's id number.
-	     * @param    { Object } events      [description]
-	     * @property { Number } [difficulty]     [description]
-	     * @property { Array  } [games] [description]
-	     * @property { Board  } [board] [description]
-	     * @property { Object } [solution] [description]
+	     * @param  { Function } service - stores func that makes request for games
+	     * @param  { variable } modules - holds submodules for injection
 	     **************************************************************************/
 	
 	    function App() {
 	        _classCallCheck(this, App);
 	
 	        var modules = {
+	
 	            Game: _Game2['default'],
 	            Header: _Header2['default'],
 	            Footer: _Footer2['default']
 	        };
 	
+	        var _props = _defaultProps2['default'];
+	        this.name = 'Uberdoku';
 	        this.events = new _EventSystem2['default']();
 	        /** @function */
 	        this.service = _dataservice2['default'].getGames;
-	
-	        var _props = _defaultProps2['default'];
-	
+	        /* private getter method */
+	        this.getProps = function () {
+	            return _props;
+	        };
 	        /* initialize modules for App */
 	        this.initialize(modules, _props);
 	    }
@@ -1739,12 +1747,13 @@
 	    _createClass(App, [{
 	        key: 'initialize',
 	
-	        /**
-	         * [initialize description]
-	         * @param  {[type]} modules [description]
-	         * @param  {[type]} props   [description]
-	         * @return {[type]}         [description]
-	         */
+	        /**************************************************************************
+	         * initializes app by instantiating main components
+	         * and initializing data request
+	         * @param  {[Object]} modules - app modules for injection
+	         * @param  {[Object]} props - default props passed to components
+	         * @return {[Object]} = a data object
+	         *************************************************************************/
 	
 	        value: function initialize(modules, props) {
 	            /** @function */
@@ -1761,10 +1770,10 @@
 	    }, {
 	        key: 'getData',
 	
-	        /**
-	         * [getData description]
-	         * @return {[type]} [description]
-	         */
+	        /************************************************************************
+	        * [getData description]
+	        * @return {[type]} [description]
+	        *************************************************************************/
 	
 	        value: function getData() {
 	            return this.service(this.handleRequest.bind(this));
@@ -1772,11 +1781,11 @@
 	    }, {
 	        key: 'handleRequest',
 	
-	        /**
+	        /*************************************************************************
 	         * [handleRequest description]
 	         * @param  {[type]} data [description]
 	         * @return {[type]}      [description]
-	         */
+	         *************************************************************************/
 	
 	        value: function handleRequest(data) {
 	            var _this = this;
@@ -1809,19 +1818,21 @@
 	    return App;
 	})();
 	
-	/*load App when ready*/
+	/**************************LOAD APP WHEN READY *******************************/
+	
 	(function ($, _) {
 	
 	    $(document).ready(function () {
-	        new App();
+	        return new App();
 	    });
 	})($, _);
 	
-	/**
+	/*********************************************
 	 * Global logger that logs app error messages 
 	 * @param  {string} message [description]
 	 * @param  {array} args 
-	 */
+	 *********************************************/
+	
 	function $logger(message) {
 	    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 	        args[_key - 1] = arguments[_key];
@@ -1830,6 +1841,9 @@
 	    console.error.apply(console, [message].concat(args));
 	    console.trace();
 	}
+	
+	exports['default'] = App;
+	module.exports = exports['default'];
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! lodash */ 3), __webpack_require__(/*! jquery */ 1)))
 
 /***/ },
@@ -1942,9 +1956,9 @@
 
 /***/ },
 /* 8 */
-/*!**************************************!*\
-  !*** ./src/app/utils/EventSystem.js ***!
-  \**************************************/
+/*!***************************************!*\
+  !*** ./src/app/utils/EventSystem.es6 ***!
+  \***************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2078,7 +2092,7 @@
 	
 	var _Promise = __webpack_require__(/*! es6-promise */ 2);
 	
-	var _Board = __webpack_require__(/*! ../board/board.module */ 18);
+	var _Board = __webpack_require__(/*! ../board/board.module */ 15);
 	
 	var _Board2 = _interopRequireWildcard(_Board);
 	
@@ -2369,9 +2383,9 @@
 	    value: true
 	});
 	
-	__webpack_require__(/*! ./footer.style */ 20);
+	__webpack_require__(/*! ./footer.style */ 18);
 	
-	var _footerView = __webpack_require__(/*! ./footer.tpl.html */ 22);
+	var _footerView = __webpack_require__(/*! ./footer.tpl.html */ 21);
 	
 	var _footerView2 = _interopRequireWildcard(_footerView);
 	
@@ -2453,9 +2467,9 @@
 
 /***/ },
 /* 11 */
-/*!*************************************************!*\
-  !*** ./src/app/modules/header/header.module.js ***!
-  \*************************************************/
+/*!**************************************************!*\
+  !*** ./src/app/modules/header/header.module.es6 ***!
+  \**************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -2470,9 +2484,9 @@
 	    value: true
 	});
 	
-	__webpack_require__(/*! ./header.style */ 15);
+	__webpack_require__(/*! ./header.style */ 16);
 	
-	var _headerView = __webpack_require__(/*! ./header.tpl */ 17);
+	var _headerView = __webpack_require__(/*! ./header.tpl */ 20);
 	
 	var _headerView2 = _interopRequireWildcard(_headerView);
 	
@@ -2562,25 +2576,6 @@
 /* 13 */,
 /* 14 */,
 /* 15 */
-/*!**************************************************!*\
-  !*** ./src/app/modules/header/header.style.scss ***!
-  \**************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 16 */,
-/* 17 */
-/*!************************************************!*\
-  !*** ./src/app/modules/header/header.tpl.html ***!
-  \************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = "<ul class=\"navigation\">\n    <li><div href=\"#\" id=\"timer\">Difficulty</div></li>\n    <li><div href=\"#\"><input id=\"difficulty\" type=\"range\" min=\"0\" max=\"100\" value=\"50\" /></div></li>\n</ul>\n"
-
-/***/ },
-/* 18 */
 /*!************************************************!*\
   !*** ./src/app/modules/board/board.module.es6 ***!
   \************************************************/
@@ -2893,8 +2888,17 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! lodash */ 3), __webpack_require__(/*! jquery */ 1)))
 
 /***/ },
-/* 19 */,
-/* 20 */
+/* 16 */
+/*!**************************************************!*\
+  !*** ./src/app/modules/header/header.style.scss ***!
+  \**************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 17 */,
+/* 18 */
 /*!**************************************************!*\
   !*** ./src/app/modules/footer/footer.style.scss ***!
   \**************************************************/
@@ -2903,8 +2907,17 @@
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 21 */,
-/* 22 */
+/* 19 */,
+/* 20 */
+/*!************************************************!*\
+  !*** ./src/app/modules/header/header.tpl.html ***!
+  \************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = "<ul class=\"navigation\">\n    <li><div href=\"#\" id=\"timer\">Difficulty</div></li>\n    <li><div href=\"#\"><input id=\"difficulty\" type=\"range\" min=\"0\" max=\"100\" value=\"50\" /></div></li>\n</ul>\n"
+
+/***/ },
+/* 21 */
 /*!************************************************!*\
   !*** ./src/app/modules/footer/footer.tpl.html ***!
   \************************************************/
@@ -2913,6 +2926,7 @@
 	module.exports = "<ul class=\"flex-container footer\">\n    <li id=\"clear-board\" class=\"flex-item footer\">clear</li>\n    <li id=\"check\" class=\"flex-item footer\">check</li>\n    <li id=\"new-game\" class=\"flex-item footer\">new</li>\n</ul>\n"
 
 /***/ },
+/* 22 */,
 /* 23 */
 /*!************************************************!*\
   !*** ./src/app/modules/board/board.style.scss ***!

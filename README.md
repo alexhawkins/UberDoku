@@ -11,7 +11,7 @@ A Sedoku board game that demonstrates a highly modular workflow using the latest
 * Compilation with Webpack
 * Write Next Generation JavaScript with Babel compiler
 * Modular Stylesheets with SASS, CSS or mixed
-* Responsive FlexBox layout for both Desktop and Mobile devices
+* Responsive FlexBox layout
 * Modular Code Architecture for hot swapping components, making it easy to update and add to the existing codebase
 * Liberal Use of Promises with ES6 Polyfill
 * Embedded resources like images or fonts
@@ -162,7 +162,7 @@ Also check the [webpack-dev-server documentation](http://webpack.github.io/docs/
 
 Build the client bundle to your ```dist``` folder
 ``` bash
-npm run deploy
+ npm run deploy
 ```
 Copy the `index.html` file from the public folder into the `dist` folder, particularly if you plan to deploy to firebase.
 
@@ -182,9 +182,18 @@ Copy the `index.html` file from the public folder into the `dist` folder, partic
 * Then deploy your website with `firebase deploy`. It's that simple
 
 
-### **Testing**
+### **Testing your ES6 Code with  ES6 Code**
+Feel free to customize `karma.conf.js`
+. All tests can be found in the test directory and the filename must end with `_test.es6`
+
+To run all tests and autowatch your code for when a test fails:
 ```bash
-...coming soon
+ npm test
+``` 
+
+To run  tests only once and then exit
+```bash
+ npm run test-once
 ``` 
 
 ### Loaders and file types
