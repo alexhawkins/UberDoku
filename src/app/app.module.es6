@@ -1,15 +1,14 @@
 'use strict';
 import './assets/stylesheets/base';
-import dataservice   from './utils/DataService';
-import defaultProps  from './utils/defaultProps';
+import defaultProps    from './utils/defaultProps';
 
-import {  Promise  } from 'es6-promise';
+import {  Promise  }   from 'es6-promise';
 
-import Game          from './modules/game/game.module';
-import Footer        from './modules/footer/footer.module';
-import Header        from './modules/header/header.module';
-import EventSystem   from './utils/EventSystem';
-
+import Game            from './modules/game/game.module';
+import Footer          from './modules/footer/footer.module';
+import Header          from './modules/header/header.module';
+import EventSystem     from './utils/EventSystem';
+import SudokuMaker     from './utils/SudokuMaker';
 /**************************************************************************
  * @class               App 
  * @module   { Object } Game         - where state of the game is set
@@ -27,8 +26,9 @@ class App {
 
     /**************************************************************************
      * @constructor 
-     * @param  { Function } service - stores func that makes request for games
-     * @param  { variable } modules - holds submodules for injection
+     * @param    { Function } service - stores func that makes request for games
+     * @param    { Object   } modules - holds submodules for injection
+     * @callback { Function } getMoreGames - gets more sudoku boards when out   
      **************************************************************************/
 
     constructor( ) {
@@ -40,28 +40,25 @@ class App {
             Footer
         };
 
-        let _props    = defaultProps;
-        this.name     = 'Uberdoku';
-        this.events   = new EventSystem( );
-        /** @function */
-        this.service  = dataservice.getGames;
-        /* private getter method */
-        this.getProps = ( ) => _props;
-        /* initialize modules for App */
-        this.initialize( modules, _props );
+        let _props         = defaultProps;
+        this.name          = 'Uberdoku';
+        this.events        = new EventSystem( );        
+        this.games         = this.generateBoards;
+        this.getMoreGames  = this.getData;
+       
+        this.getProps = ( ) => _props;      /* private getter method */
+        this.initialize( modules, _props ); /* initialize modules for App */
     }
 
-    /**************************************************************************
+    /***************************************************************************
      * initializes app by instantiating main components
      * and initializing data request
      * @param  {[Object]} modules - app modules for injection
      * @param  {[Object]} props - default props passed to components
      * @return {[Object]} = a data object
-     *************************************************************************/
+     ***************************************************************************/
     
     initialize( modules, props ) {
-        /** @function */
-        let getMoreGames = this.getData;
 
         this.Header = new modules.Header(
             this.events,
@@ -69,17 +66,30 @@ class App {
         );
 
         this.Game   = new modules.Game(
+            this.needMore,
             this.events,
             props
         );
 
         this.Footer = new modules.Footer(
-            getMoreGames,
             this.events,
             props
         );
 
         return this.getData( );
+    }
+
+    /*generate 50 boards at a time*/
+    generateBoards( handleRequest ){
+
+        let allBoards = [];
+
+        for(let i = 0; i < 50; i++){
+            let board = new SudokuMaker( );
+            allBoards.push(board.initialize());
+        }
+
+        return handleRequest( allBoards );
     }
 
      /************************************************************************
@@ -88,7 +98,7 @@ class App {
      *************************************************************************/
     
     getData( ) {
-     return this.service(this.handleRequest.bind(this));
+        return ( this.games( this.handleRequest.bind(this) ));
     }
 
 
@@ -99,15 +109,14 @@ class App {
      *************************************************************************/
     
     handleRequest( data ) {
-
+        console.log(data);
         let promise = new Promise(( resolve ) => {
-            let allBoards = _.map(data, e => e);
-            resolve(allBoards);
+            resolve(data);
         });
 
         promise
-            .then((allBoards) => 
-                this.Game.initialize(allBoards))
+            .then((data) => 
+                this.Game.initialize(data))
             .catch((doh)  => 
                 $logger(doh))
             .then(( )      => 

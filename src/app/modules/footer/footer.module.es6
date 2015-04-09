@@ -22,7 +22,7 @@ class Footer {
      * @property { Object } [solution] [description]
      **************************************************************************/
 
-    constructor(getMoreData, events, props) {
+    constructor(events, props) {
         this.difficulty = props.difficulty;
         this.el = '#footer';
         this.template = footerView;

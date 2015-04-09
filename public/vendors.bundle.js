@@ -1658,7 +1658,7 @@
   \********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
+	/* WEBPACK VAR INJECTION */(function($, _) {'use strict';
 	
 	var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
 	
@@ -1672,11 +1672,7 @@
 	
 	__webpack_require__(/*! ./assets/stylesheets/base */ 12);
 	
-	var _dataservice = __webpack_require__(/*! ./utils/DataService */ 6);
-	
-	var _dataservice2 = _interopRequireWildcard(_dataservice);
-	
-	var _defaultProps = __webpack_require__(/*! ./utils/defaultProps */ 7);
+	var _defaultProps = __webpack_require__(/*! ./utils/defaultProps */ 6);
 	
 	var _defaultProps2 = _interopRequireWildcard(_defaultProps);
 	
@@ -1694,9 +1690,13 @@
 	
 	var _Header2 = _interopRequireWildcard(_Header);
 	
-	var _EventSystem = __webpack_require__(/*! ./utils/EventSystem */ 8);
+	var _EventSystem = __webpack_require__(/*! ./utils/EventSystem */ 7);
 	
 	var _EventSystem2 = _interopRequireWildcard(_EventSystem);
+	
+	var _SudokuMaker = __webpack_require__(/*! ./utils/SudokuMaker */ 8);
+	
+	var _SudokuMaker2 = _interopRequireWildcard(_SudokuMaker);
 	
 	'use strict';
 	
@@ -1717,8 +1717,9 @@
 	
 	    /**************************************************************************
 	     * @constructor 
-	     * @param  { Function } service - stores func that makes request for games
-	     * @param  { variable } modules - holds submodules for injection
+	     * @param    { Function } service - stores func that makes request for games
+	     * @param    { Object   } modules - holds submodules for injection
+	     * @callback { Function } getMoreGames - gets more sudoku boards when out   
 	     **************************************************************************/
 	
 	    function App() {
@@ -1734,38 +1735,50 @@
 	        var _props = _defaultProps2['default'];
 	        this.name = 'Uberdoku';
 	        this.events = new _EventSystem2['default']();
-	        /** @function */
-	        this.service = _dataservice2['default'].getGames;
-	        /* private getter method */
+	        this.games = this.generateBoards;
+	        this.getMoreGames = this.getData;
+	
 	        this.getProps = function () {
 	            return _props;
-	        };
-	        /* initialize modules for App */
-	        this.initialize(modules, _props);
+	        }; /* private getter method */
+	        this.initialize(modules, _props); /* initialize modules for App */
 	    }
 	
 	    _createClass(App, [{
 	        key: 'initialize',
 	
-	        /**************************************************************************
+	        /***************************************************************************
 	         * initializes app by instantiating main components
 	         * and initializing data request
 	         * @param  {[Object]} modules - app modules for injection
 	         * @param  {[Object]} props - default props passed to components
 	         * @return {[Object]} = a data object
-	         *************************************************************************/
+	         ***************************************************************************/
 	
 	        value: function initialize(modules, props) {
-	            /** @function */
-	            var getMoreGames = this.getData;
 	
 	            this.Header = new modules.Header(this.events, props);
 	
-	            this.Game = new modules.Game(this.events, props);
+	            this.Game = new modules.Game(this.needMore, this.events, props);
 	
-	            this.Footer = new modules.Footer(getMoreGames, this.events, props);
+	            this.Footer = new modules.Footer(this.events, props);
 	
 	            return this.getData();
+	        }
+	    }, {
+	        key: 'generateBoards',
+	
+	        /*generate 50 boards at a time*/
+	        value: function generateBoards(handleRequest) {
+	
+	            var allBoards = [];
+	
+	            for (var i = 0; i < 50; i++) {
+	                var board = new _SudokuMaker2['default']();
+	                allBoards.push(board.initialize());
+	            }
+	
+	            return handleRequest(allBoards);
 	        }
 	    }, {
 	        key: 'getData',
@@ -1776,7 +1789,7 @@
 	        *************************************************************************/
 	
 	        value: function getData() {
-	            return this.service(this.handleRequest.bind(this));
+	            return this.games(this.handleRequest.bind(this));
 	        }
 	    }, {
 	        key: 'handleRequest',
@@ -1790,15 +1803,13 @@
 	        value: function handleRequest(data) {
 	            var _this = this;
 	
+	            console.log(data);
 	            var promise = new _Promise.Promise(function (resolve) {
-	                var allBoards = _.map(data, function (e) {
-	                    return e;
-	                });
-	                resolve(allBoards);
+	                resolve(data);
 	            });
 	
-	            promise.then(function (allBoards) {
-	                return _this.Game.initialize(allBoards);
+	            promise.then(function (data) {
+	                return _this.Game.initialize(data);
 	            })['catch'](function (doh) {
 	                return $logger(doh);
 	            }).then(function () {
@@ -1844,7 +1855,7 @@
 	
 	exports['default'] = App;
 	module.exports = exports['default'];
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! lodash */ 3), __webpack_require__(/*! jquery */ 1)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! jquery */ 1), __webpack_require__(/*! lodash */ 3)))
 
 /***/ },
 /* 5 */
@@ -1867,59 +1878,6 @@
 
 /***/ },
 /* 6 */
-/*!***************************************!*\
-  !*** ./src/app/utils/DataService.es6 ***!
-  \***************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function($) {'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-	/************************************************************************
-	* DataService.es6                                                       *
-	*************************************************************************
-	* File: DataService.Module.es6
-	* ***********************************************************************
-	* Description: where we store useful utility methods that can be used 
-	* repeatedly by n different parts of the app. 
-	/*---------------------------------------------------------------------*/
-	
-	var dataservice = {
-	
-	    /*********************************************************************
-	     * Description: getGames retreives pre-made sedoku game solutions using our 
-	     * fabricated API. We use a simple Ajax request here to simulate
-	     * making a request to a real API. This same method is what you would
-	     * use for making calls to various APIS on the web. It also takes a callback
-	     * for use when the dataType you are requesting is of JSONP. Simply change
-	     * the dataType below to JSONP and this will subdue any Cross-Domain
-	     * issues. This callback will also prove useful when requesting the
-	     * utility helper from within other modules in the main app.
-	     *********************************************************************/
-	    getGames: function getGames(callback) {
-	        $.ajax({
-	            url: 'stores/data/games.json',
-	            type: 'GET',
-	            crossDomain: true,
-	            dataType: 'json',
-	            success: function success(data) {
-	                return callback(data);
-	            },
-	            error: function error(err) {
-	                return console.log(err);
-	            }
-	        });
-	    }
-	};
-	
-	exports['default'] = dataservice;
-	module.exports = exports['default'];
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! jquery */ 1)))
-
-/***/ },
-/* 7 */
 /*!****************************************!*\
   !*** ./src/app/utils/defaultProps.es6 ***!
   \****************************************/
@@ -1955,7 +1913,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 8 */
+/* 7 */
 /*!***************************************!*\
   !*** ./src/app/utils/EventSystem.es6 ***!
   \***************************************/
@@ -2070,13 +2028,151 @@
 	module.exports = exports['default'];
 
 /***/ },
+/* 8 */
+/*!***************************************!*\
+  !*** ./src/app/utils/SudokuMaker.es6 ***!
+  \***************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var SudokuMaker = (function () {
+	    function SudokuMaker() {
+	        _classCallCheck(this, SudokuMaker);
+	
+	        this.board = [];
+	    }
+	
+	    _createClass(SudokuMaker, [{
+	        key: "initialize",
+	
+	        // initial puzzle as all zeros.
+	        value: function initialize() {
+	            for (var i = 0; i < this.board.length; i++) {
+	                this.board.push(0);
+	            }
+	
+	            return this.shuffle(this.board);
+	        }
+	    }, {
+	        key: "shuffle",
+	
+	        // stores the 9x9 game data.
+	        value: function shuffle(board) {
+	            // create the root sudoku solution. this produces the following
+	            // sudoku:
+	            //
+	            // 1 2 3 | 4 5 6 | 7 8 9
+	            // 4 5 6 | 7 8 9 | 1 2 3
+	            // 7 8 9 | 1 2 3 | 4 5 6
+	            // ---------------------
+	            // 2 3 4 | 5 6 7 | 8 9 1
+	            // 5 6 7 | 8 9 1 | 2 3 4
+	            // 8 9 1 | 2 3 4 | 5 6 7
+	            // ---------------------
+	            // 3 4 5 | 6 7 8 | 9 1 2
+	            // 6 7 8 | 9 1 2 | 3 4 5
+	            // 9 1 2 | 3 4 5 | 6 7 8
+	            for (var i = 0; i < 9; i++) {
+	                for (var j = 0; j < 9; j++) {
+	                    board[i * 9 + j] = (i * 3 + Math.floor(i / 3) + j) % 9 + 1;
+	                }
+	            }
+	
+	            // randomly shuffle the numbers in the root sudoku.
+	            for (var i = 0; i < 42; i++) {
+	                var n1 = Math.ceil(Math.random() * 9);
+	                var n2 = undefined;
+	                do {
+	                    n2 = Math.ceil(Math.random() * 9);
+	                } while (n1 === n2);
+	
+	                for (var row = 0; row < 9; row++) {
+	                    for (var col = 0; col < col; col++) {
+	                        if (board[row * 9 + col] === n1) {
+	                            board[row * 9 + col] = n2;
+	                        } else if (board[row * 9 + col] === n2) {
+	                            board[row * 9 + col] = n1;
+	                        }
+	                    }
+	                }
+	            }
+	
+	            /* randomly swap corresponding columns from each column of
+	             * subsquares 8*/
+	
+	            for (var c = 0; c < 42; c++) {
+	                var s1 = Math.floor(Math.random() * 3);
+	                var s2 = Math.floor(Math.random() * 3);
+	
+	                for (var row = 0; row < 9; row++) {
+	                    var tmp = this.board[row * 9 + (s1 * 3 + c % 3)];
+	                    this.board[row * 9 + (s1 * 3 + c % 3)] = this.board[row * 9 + (s2 * 3 + c % 3)];
+	                    this.board[row * 9 + (s2 * 3 + c % 3)] = tmp;
+	                }
+	            }
+	
+	            // randomly swap columns within each column of subsquares
+	
+	            for (var s = 0; s < 42; s++) {
+	                var c1 = Math.floor(Math.random() * 3);
+	                var c2 = Math.floor(Math.random() * 3);
+	
+	                for (var row = 0; row < 9; row++) {
+	                    var tmp = this.board[row * 9 + (s % 3 * 3 + c1)];
+	                    this.board[row * 9 + (s % 3 * 3 + c1)] = this.board[row * 9 + (s % 3 * 3 + c2)];
+	                    this.board[row * 9 + (s % 3 * 3 + c2)] = tmp;
+	                }
+	            }
+	
+	            // randomly swap rows within each row of subsquares
+	            for (var s = 0; s < 42; s++) {
+	                var r1 = Math.floor(Math.random() * 3);
+	                var r2 = Math.floor(Math.random() * 3);
+	
+	                for (var col = 0; col < 9; col++) {
+	                    var tmp = this.board[(s % 3 * 3 + r1) * 9 + col];
+	                    this.board[(s % 3 * 3 + r1) * 9 + col] = this.board[(s % 3 * 3 + r2) * 9 + col];
+	                    this.board[(s % 3 * 3 + r2) * 9 + col] = tmp;
+	                }
+	            }
+	
+	            return this.generateRowsAndColums(this.board);
+	        }
+	    }, {
+	        key: "generateRowsAndColums",
+	        value: function generateRowsAndColums(board) {
+	            var newBoard = [];
+	            while (board.length > 0) {
+	                var row = board.splice(0, 9);
+	                newBoard.push(row);
+	            }
+	            return newBoard;
+	        }
+	    }]);
+	
+	    return SudokuMaker;
+	})();
+	
+	exports["default"] = SudokuMaker;
+	module.exports = exports["default"];
+
+/***/ },
 /* 9 */
 /*!**********************************************!*\
   !*** ./src/app/modules/game/game.module.es6 ***!
   \**********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
+	/* WEBPACK VAR INJECTION */(function($) {'use strict';
 	
 	var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
 	
@@ -2095,10 +2191,6 @@
 	var _Board = __webpack_require__(/*! ../board/board.module */ 15);
 	
 	var _Board2 = _interopRequireWildcard(_Board);
-	
-	var _dataservice = __webpack_require__(/*! ../../utils/DataService */ 6);
-	
-	var _dataservice2 = _interopRequireWildcard(_dataservice);
 	
 	'use strict';
 	
@@ -2119,9 +2211,10 @@
 	     * @property { Object } [solution] [description]
 	     **************************************************************************/
 	
-	    function Game(events, props) {
+	    function Game(getMoreGames, events, props) {
 	        _classCallCheck(this, Game);
 	
+	        this.getMoreGames = getMoreGames;
 	        this.events = events;
 	        this.difficulty = props.difficulty;
 	
@@ -2175,20 +2268,6 @@
 	            this._setListeners();
 	        }
 	    }, {
-	        key: 'observe',
-	
-	        /**
-	         * Subscribe to third party data asynchronously
-	         * [requestGameData description]
-	         * @return {JSON Object} returns a JSON ojbect with Sedoku games.
-	         */
-	
-	        value: function observe(props, state) {
-	            return {
-	                data: this.requestGameData(props)
-	            };
-	        }
-	    }, {
 	        key: 'requestGameData',
 	
 	        /**
@@ -2197,7 +2276,7 @@
 	         */
 	
 	        value: function requestGameData() {
-	            return _dataservice2['default'].getGames(this.setBoardData.bind(this));
+	            return this.getMoreGames(this.setBoardData.bind(this));
 	        }
 	    }, {
 	        key: 'setBoardData',
@@ -2208,18 +2287,36 @@
 	         */
 	
 	        value: function setBoardData(data) {
+	            this.setAllGames(data);
+	            return this.createSolutionBoard();
+	        }
+	    }, {
+	        key: 'createSolutionBoard',
+	
+	        /**
+	         * [createSolutionBoard description]
+	         * @param  {[type]} all [description]
+	         * @return {[type]}     [description]
+	         */
+	
+	        value: function createSolutionBoard() {
 	            var _this = this;
 	
+	            var allBoards = this.getAllGames().get('all');
 	            var promise = new _Promise.Promise(function (resolve) {
-	                var games = _.map(data, function (e) {
-	                    return e;
-	                });
-	                _this.setAllGames(games);
-	                resolve(games);
+	                resolve(allBoards);
 	            });
 	
-	            promise.then(function (games) {
-	                return _this.createSolutionBoard(games);
+	            promise.then(function (allBoards) {
+	                return allBoards.shift();
+	            })['catch'](function (doh) {
+	                return console.log(doh);
+	            }).then(function (solution) {
+	                return _this.setSolution(solution);
+	            })['catch'](function (doh) {
+	                return console.log(doh);
+	            }).then(function (solution) {
+	                return _this.getSolution();
 	            })['catch'](function (doh) {
 	                return console.log(doh);
 	            }).then(function (solution) {
@@ -2233,20 +2330,6 @@
 	            });
 	        }
 	    }, {
-	        key: 'createSolutionBoard',
-	
-	        /**
-	         * [createSolutionBoard description]
-	         * @param  {[type]} all [description]
-	         * @return {[type]}     [description]
-	         */
-	
-	        value: function createSolutionBoard(all) {
-	            var solution = all.shift();
-	            this.setSolution(solution);
-	            return this.getSolution();
-	        }
-	    }, {
 	        key: 'newGame',
 	
 	        /**
@@ -2256,7 +2339,7 @@
 	
 	        value: function newGame() {
 	            var all = this.getAllGames().get('all');
-	            return all.length > 0 ? this.setBoardData(all) : this.requestGameData();
+	            return all.length > 0 ? this.createSolutionBoard() : this.requestGameData();
 	        }
 	    }, {
 	        key: 'render',
@@ -2362,7 +2445,7 @@
 	
 	exports['default'] = Game;
 	module.exports = exports['default'];
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! lodash */ 3), __webpack_require__(/*! jquery */ 1)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! jquery */ 1)))
 
 /***/ },
 /* 10 */
@@ -2383,7 +2466,7 @@
 	    value: true
 	});
 	
-	__webpack_require__(/*! ./footer.style */ 18);
+	__webpack_require__(/*! ./footer.style */ 17);
 	
 	var _footerView = __webpack_require__(/*! ./footer.tpl.html */ 21);
 	
@@ -2411,7 +2494,7 @@
 	     * @property { Object } [solution] [description]
 	     **************************************************************************/
 	
-	    function Footer(getMoreData, events, props) {
+	    function Footer(events, props) {
 	        _classCallCheck(this, Footer);
 	
 	        this.difficulty = props.difficulty;
@@ -2484,9 +2567,9 @@
 	    value: true
 	});
 	
-	__webpack_require__(/*! ./header.style */ 16);
+	__webpack_require__(/*! ./header.style */ 19);
 	
-	var _headerView = __webpack_require__(/*! ./header.tpl */ 20);
+	var _headerView = __webpack_require__(/*! ./header.tpl */ 22);
 	
 	var _headerView2 = _interopRequireWildcard(_headerView);
 	
@@ -2598,13 +2681,7 @@
 	/************************************************************************
 	 * Class: Board                                                         *
 	 * File: Board.Module.es6                                               *
-	 * ======================================================================
-	 * Description: the Board module is where all the magic of the game
-	 * happens. This is where the actual Game Board is created and various
-	 * calculation regarding the state of the game are made. It is our
-	 * workhorse method. Eventually, we will want to break the Board Module
-	 * into further sub components/modules.
-	 ************************************************************************/
+	 * =====================================================================*/
 	
 	var Board = (function () {
 	
@@ -2888,17 +2965,8 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! lodash */ 3), __webpack_require__(/*! jquery */ 1)))
 
 /***/ },
-/* 16 */
-/*!**************************************************!*\
-  !*** ./src/app/modules/header/header.style.scss ***!
-  \**************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 17 */,
-/* 18 */
+/* 16 */,
+/* 17 */
 /*!**************************************************!*\
   !*** ./src/app/modules/footer/footer.style.scss ***!
   \**************************************************/
@@ -2907,16 +2975,17 @@
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 19 */,
-/* 20 */
-/*!************************************************!*\
-  !*** ./src/app/modules/header/header.tpl.html ***!
-  \************************************************/
+/* 18 */,
+/* 19 */
+/*!**************************************************!*\
+  !*** ./src/app/modules/header/header.style.scss ***!
+  \**************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = "<ul class=\"navigation\">\n    <li><div href=\"#\" id=\"timer\">Difficulty</div></li>\n    <li><div href=\"#\"><input id=\"difficulty\" type=\"range\" min=\"0\" max=\"100\" value=\"50\" /></div></li>\n</ul>\n"
+	// removed by extract-text-webpack-plugin
 
 /***/ },
+/* 20 */,
 /* 21 */
 /*!************************************************!*\
   !*** ./src/app/modules/footer/footer.tpl.html ***!
@@ -2926,7 +2995,15 @@
 	module.exports = "<ul class=\"flex-container footer\">\n    <li id=\"clear-board\" class=\"flex-item footer\">clear</li>\n    <li id=\"check\" class=\"flex-item footer\">check</li>\n    <li id=\"new-game\" class=\"flex-item footer\">new</li>\n</ul>\n"
 
 /***/ },
-/* 22 */,
+/* 22 */
+/*!************************************************!*\
+  !*** ./src/app/modules/header/header.tpl.html ***!
+  \************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = "<ul class=\"navigation\">\n    <li><div href=\"#\" id=\"timer\">Difficulty</div></li>\n    <li><div href=\"#\"><input id=\"difficulty\" type=\"range\" min=\"0\" max=\"100\" value=\"50\" /></div></li>\n</ul>\n"
+
+/***/ },
 /* 23 */
 /*!************************************************!*\
   !*** ./src/app/modules/board/board.style.scss ***!

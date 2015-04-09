@@ -3,7 +3,6 @@ import '../../assets/stylesheets/base';
 import { Promise }  from 'es6-promise';
 
 import Board        from '../board/board.module';
-import dataservice  from '../../utils/DataService';
 
 
 /**
@@ -22,8 +21,8 @@ class Game {
      * @property { Object } [solution] [description]
      **************************************************************************/
 
-    constructor(events, props) {
-
+    constructor(getMoreGames, events, props) {
+        this.getMoreGames = getMoreGames;
         this.events = events;
         this.difficulty = props.difficulty;
 
@@ -63,24 +62,12 @@ class Game {
     }
 
     /**
-     * Subscribe to third party data asynchronously
-     * [requestGameData description]
-     * @return {JSON Object} returns a JSON ojbect with Sedoku games.
-     */
-    
-    observe(props, state) {
-      return {
-          data: this.requestGameData(props)
-      };
-    }
-
-    /**
      * [requestGameData description]
      * @return {[type]} [description]
      */
     
     requestGameData() {
-        return dataservice.getGames(this.setBoardData.bind(this));
+        return this.getMoreGames(this.setBoardData.bind(this));
     }
 
     /**
@@ -89,19 +76,8 @@ class Game {
      */
     
     setBoardData(data) {
-        let promise = new Promise((resolve) => {
-            let games = _.map(data, e => e);
-            this.setAllGames(games);
-            resolve(games);
-        });
-
-        promise
-            .then((games) => this.createSolutionBoard(games))
-            .catch((doh) => console.log(doh))
-            .then((solution) => this.render(solution))
-            .catch((doh) => console.log(doh))
-            .then((board) => this.setGameBoard(board))
-            .catch((doh) => console.log(doh));
+        this.setAllGames(data);
+        return this.createSolutionBoard()
     }
 
     /**
@@ -110,10 +86,23 @@ class Game {
      * @return {[type]}     [description]
      */
     
-    createSolutionBoard(all) {
-        let solution = all.shift();
-        this.setSolution(solution);
-        return this.getSolution();
+    createSolutionBoard( ) {
+        let allBoards = this.getAllGames().get('all');
+        let promise = new Promise((resolve) => {
+            resolve(allBoards);
+        });
+
+        promise
+            .then((allBoards) => allBoards.shift())
+            .catch((doh) => console.log(doh))
+            .then((solution) => this.setSolution(solution))
+            .catch((doh) => console.log(doh))
+            .then((solution) => this.getSolution())
+            .catch((doh) => console.log(doh))
+            .then((solution) => this.render(solution))
+            .catch((doh) => console.log(doh))
+            .then((board) => this.setGameBoard(board))
+            .catch((doh) => console.log(doh));
     }
 
     /**
@@ -122,8 +111,8 @@ class Game {
      */
     
     newGame() {
-        let all = this.getAllGames().get('all');
-        return all.length > 0 ? this.setBoardData(all) : this.requestGameData();
+        let all = this.getAllGames().get('all')
+        return all.length > 0 ? this.createSolutionBoard() : this.requestGameData();
     }
 
     /**

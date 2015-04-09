@@ -1,6 +1,6 @@
 #Uberdoku
 
-A Sedoku board game that demonstrates a highly modular workflow using the latest from EcmaScript 6, Sass modules, and Webpack without the use of a modern framework. With a basic html skeleton wrapped in a highly responsive CSS Flexbox Layout, this project is highly customizable. It also comes with a very lightweight Eventing System for creating custom events. 
+A Sudoku board game that demonstrates a highly modular workflow using the latest from EcmaScript 6, Sass modules, and Webpack without the use of a modern framework. With a basic html skeleton wrapped in a highly responsive CSS Flexbox Layout, this project is highly customizable. It also comes with a very lightweight Eventing System for creating custom events. 
 
 
 ###*Live Demo*
