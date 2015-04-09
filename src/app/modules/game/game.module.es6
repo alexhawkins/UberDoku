@@ -77,7 +77,7 @@ class Game {
     
     setBoardData(data) {
         this.setAllGames(data);
-        return this.createSolutionBoard()
+        return this.createSolutionBoard();
     }
 
     /**
@@ -111,7 +111,7 @@ class Game {
      */
     
     newGame() {
-        let all = this.getAllGames().get('all')
+        let all = this.getAllGames().get('all');
         return all.length > 0 ? this.createSolutionBoard() : this.requestGameData();
     }
 
