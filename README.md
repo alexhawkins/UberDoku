@@ -70,6 +70,7 @@ A Sudoku board game that demonstrates a highly modular workflow using the latest
 |   ├── ├── ├── EventSystem.es6
 |   ├── ├── ├── DataService.es6
 |   ├── ├── ├── defaultProps.es6
+|   ├── ├── ├── SudokuMaker.es6
 |   ├── ├── ├── lodash.min.js
 |   ├── ├── assets/
 |   ├── ├── ├── stylesheets/

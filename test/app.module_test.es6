@@ -25,10 +25,9 @@ describe("App", () => {
     });
     describe("constructor", () => {
         it("should have the following methods & properties", () => {
-            expect(app.service).to.be.an.instanceof(Function);
+            expect(app.getMoreGames).to.be.an.instanceof(Function);
             expect(app.events).to.be.an.instanceof(Object);
             expect(app.initialize).to.be.an.instanceof(Function);
-            expect(app.getData).to.be.an.instanceof(Function);
             expect(app.getData).to.be.an.instanceof(Function);
             expect(app.handleRequest).to.be.an.instanceof(Function);
         });
@@ -63,43 +62,16 @@ describe("App", () => {
     });
 
 
-    let data = {
-        "0": [
-            [9, 3, 4, 6, 7, 8, 9, 1, 2],
-            [6, 7, 2, 1, 9, 5, 3, 4, 8],
-            [1, 9, 8, 3, 4, 2, 5, 6, 7],
-            [8, 5, 9, 7, 6, 1, 4, 2, 3],
-            [4, 2, 6, 8, 5, 3, 7, 9, 1],
-            [7, 1, 3, 9, 2, 4, 8, 5, 6],
-            [9, 6, 1, 5, 3, 7, 2, 8, 4],
-            [2, 8, 7, 4, 1, 9, 6, 3, 5],
-            [3, 4, 5, 2, 8, 6, 1, 7, 9]
-        ],
-        "1": [
-            [5, 3, 4, 6, 7, 8, 9, 1, 2],
-            [6, 7, 2, 1, 9, 5, 3, 4, 8],
-            [1, 9, 8, 3, 4, 2, 5, 6, 7],
-            [8, 5, 9, 7, 6, 1, 4, 2, 3],
-            [4, 2, 6, 8, 5, 3, 7, 9, 1],
-            [7, 1, 3, 9, 2, 4, 8, 5, 6],
-            [9, 6, 1, 5, 3, 7, 2, 8, 4],
-            [2, 8, 7, 4, 1, 9, 6, 3, 5],
-            [3, 4, 5, 2, 8, 6, 1, 7, 9]
-        ]
-    };
-
-    app.handleRequest(data);
-    app.Game.initialize(data);
     describe("games", () => {
 
-        it("should have made an ajax request and retrieved game data", () => {
+        it("should have made an generated a board game retrieved game data", () => {
             expect(app.Game.getAllGames()).to.be.an.instanceof(Map);
             expect(app.Game.getGameBoard()).to.be.an.instanceof(Map);
             expect(app.Game.getAllGames().get('all')).to.be.an.instanceof(Object);
             expect(Array.isArray(app.Game.getAllGames().get('all')[0]));
         });
         it("should be an array of games", () => {
-            expect(app.Game.getAllGames().get('all').length).to.equal(1);
+            expect(app.Game.getAllGames().get('all').length).to.equal(49);
             expect(Array.isArray(app.Game.getAllGames().get('all')[0]));
             expect(Array.isArray(app.Game.getAllGames().get('all')[1]));
         });
@@ -111,9 +83,7 @@ describe("App", () => {
         });
     });
 
-
     describe("solution", () => {
-        app.handleRequest(data);
         it("should have set a solution after retrieving game data", () => {
             expect(app.Game.getSolution()).to.be.an.instanceof(Map);
             expect(app.Game.getSolution().get('solution')).to.be.an.instanceof(Object);

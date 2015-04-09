@@ -1803,7 +1803,6 @@
 	        value: function handleRequest(data) {
 	            var _this = this;
 	
-	            console.log(data);
 	            var promise = new _Promise.Promise(function (resolve) {
 	                resolve(data);
 	            });

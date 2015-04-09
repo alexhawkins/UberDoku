@@ -109,7 +109,6 @@ class App {
      *************************************************************************/
     
     handleRequest( data ) {
-        console.log(data);
         let promise = new Promise(( resolve ) => {
             resolve(data);
         });
